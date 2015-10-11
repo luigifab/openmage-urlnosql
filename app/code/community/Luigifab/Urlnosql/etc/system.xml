@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Created V/26/06/2015
+ * Updated S/12/09/2015
+ * Version 8
+ *
+ * Copyright 2015 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ *
+ * This program is free software, you can redistribute it or modify
+ * it under the terms of the GNU General Public License (GPL) as published
+ * by the free software foundation, either version 2 of the license, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but without any warranty, without even the implied warranty of
+ * merchantability or fitness for a particular purpose. See the
+ * GNU General Public License (GPL) for more details.
+-->
+
+<config>
+	<tabs>
+		<luigifab>
+			<label>luigifab</label>
+			<sort_order>103</sort_order>
+		</luigifab>
+	</tabs>
+	<sections>
+		<urlnosql translate="label">
+			<label>Product url rewrite</label>
+			<tab>luigifab</tab>
+			<sort_order>71</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>0</show_in_website>
+			<show_in_store>0</show_in_store>
+			<groups>
+				<help>
+					<sort_order>0</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>0</show_in_website>
+					<show_in_store>0</show_in_store>
+					<frontend_model>urlnosql/adminhtml_config_help</frontend_model>
+				</help>
+				<general translate="label">
+					<label>General</label>
+					<sort_order>1</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>0</show_in_website>
+					<show_in_store>0</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<enabled translate="label comment">
+							<label>Enable</label>
+							<comment><![CDATA[Disable the "<b>url_key</b>" product attribute.<br />Disable products urls indexation.<br />Effective immediately.]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>1</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</enabled>
+						<attributes translate="label comment">
+							<label>Attributes to use</label>
+							<comment><![CDATA[Example: www.example.org/id-<b>xyz</b>.html<br />Attributes separated by space.]]></comment>
+							<frontend_type>text</frontend_type>
+							<sort_order>2</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</attributes>
+						<ignore translate="label comment">
+							<label>Values to ignore</label>
+							<comment><![CDATA[Filters the values ​​of previous attributes.<br />Values separated by space.]]></comment>
+							<frontend_type>textarea</frontend_type>
+							<sort_order>3</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</ignore>
+						<check translate="label comment">
+							<label>Check products address</label>
+							<comment><![CDATA[Redirect www.example.org/id*.html to www.example.org/id-<b>xyz</b>.html<br />Redirect non-visible products to the configurable product.]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>4</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</check>
+					</fields>
+				</general>
+				<example translate="label">
+					<label>Example with the last product created</label>
+					<frontend_model>urlnosql/adminhtml_config_example</frontend_model>
+					<sort_order>2</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>0</show_in_website>
+					<show_in_store>0</show_in_store>
+				</example>
+			</groups>
+		</urlnosql>
+		<catalog>
+			<groups>
+				<seo>
+					<fields>
+						<product_use_categories translate="comment">
+							<frontend_model>urlnosql/adminhtml_config_comment</frontend_model>
+							<comment><![CDATA[Disabled if you use <b>urlnosql</b> module (see {{Product url rewrite}}).]]></comment>
+						</product_use_categories>
+						<save_rewrites_history translate="comment">
+							<frontend_model>urlnosql/adminhtml_config_comment</frontend_model>
+							<comment><![CDATA[Disabled if you use <b>urlnosql</b> module (see {{Product url rewrite}}).]]></comment>
+						</save_rewrites_history>
+					</fields>
+				</seo>
+			</groups>
+		</catalog>
+	</sections>
+</config>
