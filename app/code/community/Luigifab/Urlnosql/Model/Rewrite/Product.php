@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/12/09/2015
- * Version 11
+ * Updated J/17/12/2015
+ * Version 12
  *
- * Copyright 2015 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -35,7 +35,8 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 
 				// $product->getData($attribute) = '' si un attribut liste déroulante n'a pas de valeur (backend_type = int)
 				// getAttributeRawValue uniquement si on demande la valeur pour une autre vue magasin
-				if (is_object($source) && ($source->getBackendType() == 'varchar'))
+				// surtout pas de === (transtypage avec == )
+				if (is_object($source) && ($source->getBackendType() === 'varchar'))
 					$value = ($storeId == Mage::app()->getStore()->getStoreId()) ? $product->getData($attribute) :
 						Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $attribute, $storeId);
 				else

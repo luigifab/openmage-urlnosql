@@ -1,10 +1,10 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/29/06/2015
- * Version 2
+ * Updated M/22/09/2015
+ * Version 3
  *
- * Copyright 2015 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -44,7 +44,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 					$product = Mage::getModel('catalog/product')->load(intval($result[0]));
 					//Mage::register('current_product', $product); NO!
 
-					if ($product->getVisibility() == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+					if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
 
 						$parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
 
