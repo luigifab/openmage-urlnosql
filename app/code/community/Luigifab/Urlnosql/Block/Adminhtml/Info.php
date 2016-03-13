@@ -1,8 +1,8 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated J/17/12/2015
- * Version 8
+ * Updated M/08/03/2016
+ * Version 9
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -43,15 +43,19 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$storeId    = intval($this->getRequest()->getParam('store', Mage::app()->getWebsite(true)->getDefaultGroup()->getDefaultStoreId()));
 		$attributes = array_filter(explode(' ', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 		$ignores    = array_filter(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/ignore'))));
+		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
 
 		$html = array();
 
 		// format de l'url
-		// pour information (liste des attributs et liste des valeurs à ignorer)
+		// pour information (liste des attributs et liste des valeurs à ignorer, ce produit remplace)
 		if (count($ignores) > 0)
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), Mage::helper('catalog/product')->getProductUrlSuffix()).'<br />'.$this->__('Ignore values: %s.', implode(', ', $ignores)).'</p>';
 		else
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), Mage::helper('catalog/product')->getProductUrlSuffix()).'</p>';
+
+		if (($oldids !== '') && ($product->getData($oldids) !== ''))
+			$html[] = '<p>'.$this->__('This product replace old products: %s.', $product->getData($oldids)).'</p>';
 
 		// détail de l'url
 		// pour la vue magasin par défaut, ou pour la vue magasin sélectionnée

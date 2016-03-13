@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/22/09/2015
- * Version 3
+ * Updated M/08/03/2016
+ * Version 4
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -35,15 +35,23 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 		if (count($params) === 1) {
 
-			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params[0], $result);
+			// Array ( [0] => 300003-adfghj.html )
+			$params = $params[0];
+
+			// recherche de l'id dans l'url
+			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params, $result);
 
 			if (isset($result[1]) && is_numeric($result[1])) {
 
+				// Array ( [0] => 300003-adfghj.html [1] => 300003 )
+				$result = intval($result[1]);
+
 				if (Mage::getStoreConfig('urlnosql/general/check') === '1') {
 
-					$product = Mage::getModel('catalog/product')->load(intval($result[0]));
-					//Mage::register('current_product', $product); NO!
+					$product = Mage::getModel('catalog/product')->load($result);
+					$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 
+					// redirige le produit associé vers le produit parent
 					if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
 
 						$parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
@@ -54,19 +62,36 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 							exit;
 						}
 					}
-					else if (strpos($product->getProductUrl(), $params[0]) !== false) {
+					// affichage du produit
+					else if (strpos($product->getProductUrl(), $params) !== false) {
 						$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $product->getId());
-						$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params[0]);
+						$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
 						return true;
 					}
+					// redirige le produit vers la bonne url
 					else if ($product->getId() > 0) {
 						header('Location: '.$product->getProductUrl(), true, 301);
 						exit;
 					}
+
+					// si le produit n'existe pas ou plus (plutôt plus que pas...)
+					// on recherche le bon produit dans l'attribut oldids
+					// redirige le produit vers la bonne url
+					if ($oldids !== '') {
+
+						$product = Mage::getResourceModel('catalog/product_collection');
+						$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$result.'[[:>:]]'));
+						$product = $product->getFirstItem();
+
+						if ($product->getId() > 0) {
+							header('Location: '.$product->getProductUrl(), true, 301);
+							exit;
+						}
+					}
 				}
 				else {
-					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', intval($result[0]));
-					$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params[0]);
+					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $result);
+					$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
 					return true;
 				}
 			}

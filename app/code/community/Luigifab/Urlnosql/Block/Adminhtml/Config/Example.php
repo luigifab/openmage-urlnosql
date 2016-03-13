@@ -1,8 +1,8 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated D/06/09/2015
- * Version 4
+ * Updated M/08/03/2016
+ * Version 5
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -24,8 +24,9 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 
 		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
 
+			$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 			$product = Mage::getResourceModel('catalog/product_collection')
-				->addAttributeToSelect(Mage::getSingleton('catalog/config')->getProductAttributes())
+				->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)))
 				->addAttributeToSort('created_at', 'desc')
 				->setPage(0, 1)
 				->getFirstItem();
