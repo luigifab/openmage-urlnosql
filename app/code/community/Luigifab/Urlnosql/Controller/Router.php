@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/08/03/2016
- * Version 4
+ * Updated J/31/03/2016
+ * Version 6
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -39,16 +39,16 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$params = $params[0];
 
 			// recherche de l'id dans l'url
-			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params, $result);
+			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params, $id);
 
-			if (isset($result[1]) && is_numeric($result[1])) {
+			if (isset($id[1]) && is_numeric($id[1])) {
 
 				// Array ( [0] => 300003-adfghj.html [1] => 300003 )
-				$result = intval($result[1]);
+				$id = intval($id[1]);
 
 				if (Mage::getStoreConfig('urlnosql/general/check') === '1') {
 
-					$product = Mage::getModel('catalog/product')->load($result);
+					$product = Mage::getModel('catalog/product')->load($id);
 					$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 
 					// redirige le produit associé vers le produit parent
@@ -77,10 +77,10 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 					// si le produit n'existe pas ou plus (plutôt plus que pas...)
 					// on recherche le bon produit dans l'attribut oldids
 					// redirige le produit vers la bonne url
-					if ($oldids !== '') {
+					if ($oldids != '') { // pas de !== ici, oldids peut être NULL
 
 						$product = Mage::getResourceModel('catalog/product_collection');
-						$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$result.'[[:>:]]'));
+						$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$id.'[[:>:]]'));
 						$product = $product->getFirstItem();
 
 						if ($product->getId() > 0) {
@@ -90,7 +90,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 					}
 				}
 				else {
-					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $result);
+					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $id);
 					$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
 					return true;
 				}

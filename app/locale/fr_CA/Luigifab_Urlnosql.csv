@@ -12,7 +12,7 @@
 "Disabled if you use <b>urlnosql</b> module (see {{Product url rewrite}}).","Désactivé si vous utilisez le module <b lang=""en"">urlnosql</b> (voir {{Réécriture d'url produit}})."
 "Format: <strong>www.example.org/%s%s</strong>","Format : <strong>www.exemple.org/<span lang=""en"">%s</span>%s</strong>"
 "Ignore values: %s.","Ignorer les valeurs : %s."
-"This product replace old products: %s.","Ce produit remplace les anciens produits: %s."
+"This product replace old products: %s.","Ce produit remplace les anciens produits : %s."
 "Address description for store view #%d:","Description de l'adresse pour la vue magasin n°%d :"
 "%s <span %s>Warning! This attribute does not exist.</span>","<span lang=""en"">%s</span> <span %s>Attention ! Cet attribut n'existe pas.</span>"
 "%s: %s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>","<span lang=""en"">%s</span> : %s <span %s>Attention ! Cet attribut n'est pas utilisé dans les listes de produits (<a %s>modifier l'attribut</a>).</span>"

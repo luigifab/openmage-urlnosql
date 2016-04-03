@@ -1,8 +1,8 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated M/08/03/2016
- * Version 9
+ * Updated J/31/03/2016
+ * Version 10
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -54,7 +54,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		else
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), Mage::helper('catalog/product')->getProductUrlSuffix()).'</p>';
 
-		if (($oldids !== '') && ($product->getData($oldids) !== ''))
+		if (($oldids != '') && ($product->getData($oldids) != '')) // pas de !== ici, oldids peut être NULL
 			$html[] = '<p>'.$this->__('This product replace old products: %s.', $product->getData($oldids)).'</p>';
 
 		// détail de l'url
