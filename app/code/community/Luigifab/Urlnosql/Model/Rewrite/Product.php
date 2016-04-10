@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/17/12/2015
- * Version 12
+ * Updated V/08/04/2016
+ * Version 13
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -35,12 +35,11 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 
 				// $product->getData($attribute) = '' si un attribut liste déroulante n'a pas de valeur (backend_type = int)
 				// getAttributeRawValue uniquement si on demande la valeur pour une autre vue magasin
-				// surtout pas de === (transtypage avec == )
 				if (is_object($source) && ($source->getBackendType() === 'varchar'))
 					$value = ($storeId == Mage::app()->getStore()->getStoreId()) ? $product->getData($attribute) :
 						Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $attribute, $storeId);
 				else
-					$value = ($product->getData($attribute) == '') ? '' : $source->setStoreId($storeId)->getFrontend()->getValue($product);
+					$value = (strlen($product->getData($attribute)) < 1) ? '' : $source->setStoreId($storeId)->getFrontend()->getValue($product);
 
 				$value = Mage::helper('urlnosql')->normalizeChars(strtolower($value));
 				$value = preg_replace('#[^a-z0-9\-]#', '', $value);

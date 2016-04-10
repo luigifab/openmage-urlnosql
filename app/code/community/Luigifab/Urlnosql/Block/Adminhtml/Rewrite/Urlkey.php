@@ -29,6 +29,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Bl
 		if ((Mage::getStoreConfig('urlnosql/general/enabled') === '1') && is_object(Mage::registry('current_product'))) {
 
 			$html = str_replace(array('disabled="disabled"', 'id=""', '<label', '<input'), array('', '', '<label style="color:gray;" ', '<input disabled="disabled" '), parent::getElementHtml()).' <p class="note" style="width:auto;">'.$this->__('Disabled if you use <b>urlnosql</b> module (see {{Product url rewrite}}).').'</p>';
+
 			$html = str_replace('{{', '<a href="'.$this->getUrl('*/*/edit', array('section' => 'urlnosql')).'">', $html);
 			$html = str_replace('}}', '</a>', $html);
 

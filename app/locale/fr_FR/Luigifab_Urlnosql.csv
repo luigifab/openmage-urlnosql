@@ -4,8 +4,6 @@
 "Example: www.example.org/id-<b>xyz</b>.html<br />Attributes separated by space.","Exemple : www.exemple.org/id-<b>xyz</b>.html<br />Attributs séparés par un espace."
 "Values to ignore","Valeurs à ignorer"
 "Filters the values ​​of previous attributes.<br />Values separated by space.","Permet de filtrer les valeurs des attributs précédents.<br />Valeurs séparées par un espace."
-"Check products address","Vérifier l'adresse des produits"
-"Redirect www.example.org/id*.html to www.example.org/id-<b>xyz</b>.html<br />Redirect non-visible products to the parent product.","Redirige www.exemple.org/id*.html vers www.exemple.org/id-<b>xyz</b>.html<br />Redirige les produits non visibles vers le produit parent."
 "Attribute used for old products ids","Attribut utilisé pour les anciens ids produits"
 "Redirects deleted products to the new. The attribute must be unique and global.","Permet de rediriger des produits supprimés vers les nouveaux. L'attribut doit être unique et global."
 "Example with the latest product created","Exemple avec le dernier produit créé"

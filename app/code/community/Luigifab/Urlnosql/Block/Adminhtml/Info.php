@@ -1,8 +1,8 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated J/31/03/2016
- * Version 10
+ * Updated V/08/04/2016
+ * Version 11
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -48,18 +48,19 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$html = array();
 
 		// format de l'url
-		// pour information (liste des attributs et liste des valeurs à ignorer, ce produit remplace)
+		// pour information (liste des attributs, liste des valeurs à ignorer, ce produit remplace)
 		if (count($ignores) > 0)
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), Mage::helper('catalog/product')->getProductUrlSuffix()).'<br />'.$this->__('Ignore values: %s.', implode(', ', $ignores)).'</p>';
 		else
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), Mage::helper('catalog/product')->getProductUrlSuffix()).'</p>';
 
-		if (($oldids != '') && ($product->getData($oldids) != '')) // pas de !== ici, oldids peut être NULL
+		if ((strlen($oldids) > 0) && (strlen($product->getData($oldids)) > 0))
 			$html[] = '<p>'.$this->__('This product replace old products: %s.', $product->getData($oldids)).'</p>';
 
 		// détail de l'url
 		// pour la vue magasin par défaut, ou pour la vue magasin sélectionnée
-		$css = 'style="margin-left:8px; padding-left:19px; background:url(\''.$this->getSkinUrl('images/error_msg_icon.gif').'\') no-repeat left center;"';
+		$css = $this->getSkinUrl('images/error_msg_icon.gif');
+		$css = 'style="margin-left:8px; padding-left:19px; background:url(\''.$css.'\') no-repeat left center;"';
 
 		$html[] = '<p style="margin:1em 0 0;">'.$this->__('Address description for store view #%d:', $storeId).'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; line-height:110%; list-style:inside;">';
@@ -70,11 +71,10 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 			// $product->getData($attribute) = '' si un attribut liste déroulante n'a pas de valeur (backend_type = int)
 			// getAttributeRawValue quand on demande la valeur pour une autre vue magasin
-			// surtout pas de === (transtypage avec == )
 			if (is_object($source) && ($source->getBackendType() === 'varchar'))
 				$value = Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $attribute, $storeId);
 			else
-				$value = ($product->getData($attribute) == '') ? '' : $source->setStoreId($storeId)->getFrontend()->getValue($product);
+				$value = (strlen($product->getData($attribute)) < 1) ? '' : $source->setStoreId($storeId)->getFrontend()->getValue($product);
 
 			$value = Mage::helper('urlnosql')->normalizeChars(strtolower($value));
 			$value = preg_replace('#[^a-z0-9\-]#', '', $value);

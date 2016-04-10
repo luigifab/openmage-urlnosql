@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/31/03/2016
- * Version 6
+ * Updated V/08/04/2016
+ * Version 8
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -39,6 +39,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$params = $params[0];
 
 			// recherche de l'id dans l'url
+			// l'id étant l'id du produit dans Magento :)
 			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params, $id);
 
 			if (isset($id[1]) && is_numeric($id[1])) {
@@ -46,53 +47,45 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				// Array ( [0] => 300003-adfghj.html [1] => 300003 )
 				$id = intval($id[1]);
 
-				if (Mage::getStoreConfig('urlnosql/general/check') === '1') {
+				$product = Mage::getModel('catalog/product')->load($id);
+				$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 
-					$product = Mage::getModel('catalog/product')->load($id);
-					$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
+				// => redirige le produit associé vers le produit parent
+				if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
 
-					// redirige le produit associé vers le produit parent
-					if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+					$parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
 
-						$parentIds = Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($product->getId());
-
-						if (isset($parentIds[0]) && is_numeric($parentIds[0])) {
-							$product->load($parentIds[0]);
-							header('Location: '.$product->getProductUrl(), true, 301);
-							exit;
-						}
-					}
-					// affichage du produit
-					else if (strpos($product->getProductUrl(), $params) !== false) {
-						$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $product->getId());
-						$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
-						return true;
-					}
-					// redirige le produit vers la bonne url
-					else if ($product->getId() > 0) {
+					if (isset($parentIds[0]) && is_numeric($parentIds[0])) {
+						$product->load($parentIds[0]);
 						header('Location: '.$product->getProductUrl(), true, 301);
 						exit;
 					}
-
-					// si le produit n'existe pas ou plus (plutôt plus que pas...)
-					// on recherche le bon produit dans l'attribut oldids
-					// redirige le produit vers la bonne url
-					if ($oldids != '') { // pas de !== ici, oldids peut être NULL
-
-						$product = Mage::getResourceModel('catalog/product_collection');
-						$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$id.'[[:>:]]'));
-						$product = $product->getFirstItem();
-
-						if ($product->getId() > 0) {
-							header('Location: '.$product->getProductUrl(), true, 301);
-							exit;
-						}
-					}
 				}
-				else {
-					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $id);
+				// => affichage du produit
+				else if (strpos($product->getProductUrl(), '/'.$params) !== false) {
+					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $product->getId());
 					$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
 					return true;
+				}
+				// => redirige le produit vers la bonne url
+				else if ($product->getId() > 0) {
+					header('Location: '.$product->getProductUrl(), true, 301);
+					exit;
+				}
+
+				// si le produit n'existe pas ou plus (plutôt plus que pas...)
+				// on recherche le bon produit dans l'attribut oldids
+				// => redirige le produit vers la bonne url
+				if (strlen($oldids) > 0) {
+
+					$product = Mage::getResourceModel('catalog/product_collection');
+					$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$id.'[[:>:]]'));
+					$product = $product->getFirstItem();
+
+					if ($product->getId() > 0) {
+						header('Location: '.$product->getProductUrl(), true, 301);
+						exit;
+					}
 				}
 			}
 		}
