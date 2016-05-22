@@ -1,8 +1,8 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated V/08/04/2016
- * Version 11
+ * Updated D/08/05/2016
+ * Version 12
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -83,7 +83,8 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 				$html[] = '<li>'.$this->__('%s <span %s>Warning! This attribute does not exist.</span>', $attribute, $css).'</li>';
 			}
 			else if (($attribute !== 'entity_id') && ($source->getUsedInProductListing() !== '1')) {
-				$url = 'href="'.$this->getUrl('*/catalog_product_attribute/edit', array('attribute_id' => $source->getId())).'" onclick="window.open(this.href); return false;"';
+				$url = $this->getUrl('*/catalog_product_attribute/edit', array('attribute_id' => $source->getId()));
+				$url = 'href="'.$url.'" onclick="window.open(this.href); return false;"';
 				if (strlen($value) > 0)
 					$html[] = '<li>'.$this->__('%s: %s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>', $attribute, $value, $css, $url).'</li>';
 				else
@@ -107,13 +108,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		foreach ($stores as $store) {
 			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getStoreId()), 0, 2);
 			if ($lang !== $current)
-				$html[] = '<li><span lang="'.$lang.'">'.$this->__('(%d) %s:', $store->getStoreId(), $store->getName()).'</span> <a href="'.$product->setStoreId($store->getStoreId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
+				$html[] = '<li>'.$this->__('(%d) <span lang="%s">%s</span>:', $store->getStoreId(), $lang, $store->getName()).' <a href="'.$product->setStoreId($store->getStoreId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
 			else
 				$html[] = '<li>'.$this->__('(%d) %s:', $store->getStoreId(), $store->getName()).' <a href="'.$product->setStoreId($store->getStoreId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
 		}
 
 		$html[] = '</ul>';
-
 		return $html;
 	}
 

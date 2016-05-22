@@ -17,4 +17,5 @@
 "%s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>","<span lang=""en"">%s</span> <span %s>Attention ! Cet attribut n'est pas utilisé dans les listes de produits (<a %s>modifier l'attribut</a>).</span>"
 "%s: %s","<span lang=""en"">%s</span> : %s"
 "List of addresses:","Liste des adresses :"
+"(%d) <span lang=""%s"">%s</span>:","(%d) <span lang=""%s"">%s</span> :"
 "(%d) %s:","(%d) %s :"
