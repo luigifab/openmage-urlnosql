@@ -1,8 +1,8 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated J/03/09/2015
- * Version 4
+ * Updated V/08/07/2016
+ * Version 5
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -26,7 +26,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Bl
 
 	public function getElementHtml() {
 
-		if ((Mage::getStoreConfig('urlnosql/general/enabled') === '1') && is_object(Mage::registry('current_product'))) {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && is_object(Mage::registry('current_product'))) {
 
 			$html = str_replace(array('disabled="disabled"', 'id=""', '<label', '<input'), array('', '', '<label style="color:gray;" ', '<input disabled="disabled" '), parent::getElementHtml()).' <p class="note" style="width:auto;">'.$this->__('Disabled if you use <b>urlnosql</b> module (see {{Product url rewrite}}).').'</p>';
 

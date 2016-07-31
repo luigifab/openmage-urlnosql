@@ -1,8 +1,8 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated S/22/08/2015
- * Version 2
+ * Updated V/08/07/2016
+ * Version 3
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -26,7 +26,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Comment extends Mage_Adminhtml_Bl
 		$html = str_replace('{{', '<a href="'.$this->getUrl('*/*/edit', array('section' => 'urlnosql')).'">', $html);
 		$html = str_replace('}}', '</a>', $html);
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			$html = str_replace('<select', '<select disabled="disabled" ', $html);
 
 		return $html;

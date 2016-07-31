@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/23/04/2016
- * Version 10
+ * Updated V/08/07/2016
+ * Version 11
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -22,7 +22,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 	public function initControllerRouters($observer) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 			$router = new Luigifab_Urlnosql_Controller_Router();
 			$this->match(Mage::app()->getRequest());
 		}

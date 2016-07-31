@@ -1,8 +1,8 @@
 <?php
 /**
  * Created M/30/06/2015
- * Updated S/22/08/2015
- * Version 3
+ * Updated V/08/07/2016
+ * Version 4
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -21,10 +21,10 @@
 class Luigifab_Urlnosql_Model_Rewrite_AttrProdUrlkey extends Mage_Catalog_Model_Product_Attribute_Backend_Urlkey {
 
 	public function beforeSave($object) {
-		return (Mage::getStoreConfig('urlnosql/general/enabled') === '1') ? $this : parent::beforeSave($object);
+		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::beforeSave($object);
 	}
 
 	public function afterSave($object) {
-		return (Mage::getStoreConfig('urlnosql/general/enabled') === '1') ? $this : parent::afterSave($object);
+		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::afterSave($object);
 	}
 }

@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/22/08/2015
- * Version 4
+ * Updated V/08/07/2016
+ * Version 5
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -34,7 +34,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 		$this->refreshCategoryRewrite($this->getStores($storeId)->getRootCategoryId(), $storeId, false);
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') !== '1')
+		if (!Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			$this->refreshProductRewrites($storeId);
 
 		$this->getResource()->clearCategoryProduct($storeId);
@@ -44,7 +44,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	public function refreshCategoryRewrite($categoryId, $storeId = null, $refreshProducts = true) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			$refreshProducts = false;
 
 		return parent::refreshCategoryRewrite($categoryId, $storeId, $refreshProducts);
@@ -52,7 +52,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	public function refreshProductRewrites($storeId) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			return $this;
 		else
 			return parent::refreshProductRewrites($storeId);
@@ -60,7 +60,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	public function getShouldSaveRewritesHistory($storeId = null) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			return false;
 		else
 			return parent::getShouldSaveRewritesHistory($storeId);
@@ -68,7 +68,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	protected function _saveRewriteHistory($rewriteData, $rewrite) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			return $this;
 		else
 			return parent::_saveRewriteHistory($rewriteData, $rewrite);

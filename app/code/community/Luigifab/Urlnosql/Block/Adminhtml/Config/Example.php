@@ -1,8 +1,8 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated V/01/04/2016
- * Version 6
+ * Updated V/08/07/2016
+ * Version 7
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -22,7 +22,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 			$product = Mage::getResourceModel('catalog/product_collection')

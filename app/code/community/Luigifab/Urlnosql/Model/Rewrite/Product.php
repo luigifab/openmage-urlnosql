@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/08/04/2016
- * Version 13
+ * Updated V/08/07/2016
+ * Version 14
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -22,7 +22,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 
 	public function getUrl(Mage_Catalog_Model_Product $product, $params = array()) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$storeId    = ($product->getStoreId() > 0) ? $product->getStoreId() : Mage::app()->getStore()->getStoreId();
 			$attributes = array_filter(explode(' ', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));

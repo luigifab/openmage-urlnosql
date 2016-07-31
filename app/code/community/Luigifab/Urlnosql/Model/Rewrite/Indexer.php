@@ -1,8 +1,8 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/22/08/2015
- * Version 2
+ * Updated V/08/07/2016
+ * Version 3
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -22,7 +22,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 
 	protected function _registerProductEvent(Mage_Index_Model_Event $event) {
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1')
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
 			return $this;
 		else
 			return parent::_registerProductEvent($event);
@@ -36,7 +36,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 
 		$urlModel = Mage::getSingleton('catalog/url');
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			if (isset($data['rewrite_category_ids'])) {
 

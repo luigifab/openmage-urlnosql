@@ -1,8 +1,8 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated D/06/09/2015
- * Version 6
+ * Updated V/08/07/2016
+ * Version 7
  *
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
  * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
@@ -37,7 +37,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 
 			$entity = $this->_prepareObject($row);
 
-			if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+			if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 				$product = Mage::getResourceModel('catalog/product_collection');
 				$product->addAttributeToSelect(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/attributes'))));
@@ -62,7 +62,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 
 		$product = parent::_prepareProduct($productRow);
 
-		if (Mage::getStoreConfig('urlnosql/general/enabled') === '1') {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$data = Mage::getResourceModel('catalog/product_collection');
 			$data->addAttributeToSelect(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/attributes'))));
