@@ -1,11 +1,11 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated V/08/07/2016
- * Version 7
+ * Updated M/28/02/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -25,21 +25,21 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
-			$product = Mage::getResourceModel('catalog/product_collection')
-				->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)))
-				->addAttributeToFilter('visibility', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
-				->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
-				->addAttributeToSort('created_at', 'desc')
-				->setPage(0, 1)
-				->getFirstItem();
 
-			if ($product->getId() > 0) {
+			$products = Mage::getResourceModel('catalog/product_collection');
+			$products->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)));
+			$products->addAttributeToFilter('visibility', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE));
+			$products->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
+			$products->addAttributeToSort('created_at', 'desc');
+			$products->setPageSize(1);
 
-				Mage::register('current_product', $product);
+			if (!empty($products->getFirstItem()->getId())) {
 
-				$html  = '<div class="entry-edit-head collapseable"><strong>'.$element->getLegend().'</strong></div>'."\n";
+				Mage::register('current_product', $products->getFirstItem());
+
+				$html  = '<div class="entry-edit-head collapseable"><strong>'.$element->getData('legend').'</strong></div>'."\n";
 				$html .= '<fieldset class="'.$this->_getFieldsetCss().'">'."\n";
-				$html .=  '<legend>'.$element->getLegend().'</legend>'."\n";
+				$html .=  '<legend>'.$element->getData('legend').'</legend>'."\n";
 				$html .=  implode("\n", Mage::getBlockSingleton('urlnosql/adminhtml_info')->getHtml())."\n";
 				$html .= '</fieldset>';
 

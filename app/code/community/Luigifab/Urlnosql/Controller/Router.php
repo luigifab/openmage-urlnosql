@@ -1,11 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/08/07/2016
- * Version 11
+ * Updated M/28/02/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -38,57 +38,96 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			// Array ( [0] => 300003-adfghj.html )
 			$params = $params[0];
 
-			// recherche de l'id dans l'url
+			// recherche de l'id dans l'url (insensible à la casse)
 			// l'id étant l'id du produit dans Magento :)
-			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#', $params, $id);
+			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
 
-			if (isset($id[1]) && is_numeric($id[1])) {
+			if (!empty($id[1]) && is_numeric($id[1])) {
 
 				// Array ( [0] => 300003-adfghj.html [1] => 300003 )
 				$id = intval($id[1]);
+				$candidates = array();
 
 				$product = Mage::getModel('catalog/product')->load($id);
-				$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
+				$product = (!empty($product->getId())) ? $product : null;
 
-				// => redirige le produit associé vers le produit parent
-				if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+				// si l'url est l'url d'un produit désactivé
+				// c'est la fin des haricots la tout de suite maintenant
+				if (is_object($product) && ($product->getData('status') != Mage_Catalog_Model_Product_Status::STATUS_ENABLED)) {
+					return false;
+				}
 
-					$parentIds = array_merge(
+
+				// LE PRODUIT EXISTE MAIS N'EST PAS VISIBLE
+				// si l'url est l'url d'un produit non visible associé à un produit parent
+				// cherche les éventuels ids parents
+				if (is_object($product) && ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE)) {
+					$candidates = array_merge(
 						Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),
 						Mage::getResourceSingleton('catalog/product_link')->getParentIdsByChild($id, Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED)
 					);
+				}
 
-					if (isset($parentIds[0]) && is_numeric($parentIds[0])) {
-						$product->load($parentIds[0]);
-						header('Location: '.$product->getProductUrl(), true, 301);
-						exit(0);
+				// LE PRODUIT EXISTE ET EST VISIBLE
+				// si l'url est l'url d'un produit visible
+				// conserve le produit
+				else if (is_object($product)) {
+					$candidates = array($product);
+				}
+
+				// LE PRODUIT N'EXISTE PAS
+				// si l'url est l'url d'un produit qui n'existe pas ou plus
+				// cherche les éventuels ids de remplacement
+				else if (!is_object($product) && !empty($oldids = Mage::getStoreConfig('urlnosql/general/oldids'))) {
+
+					// https://dev.mysql.com/doc/refman/5.7/en/regexp.html
+					// https://mariadb.com/kb/en/mariadb/regular-expressions-overview/#word-boundaries
+					$products = Mage::getResourceModel('catalog/product_collection');
+					$products->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$id.'[[:>:]]'));
+
+					if (version_compare(Mage::getVersion(), '1.6', '<')) {
+						$products->getSelect()->reset(Zend_Db_Select::WHERE);
+						$products->getSelect()->where('_table_oldids.value regexp "[[:<:]]'.$id.'[[:>:]]"');
 					}
-				}
-				// => affichage du produit
-				else if (strpos($product->getProductUrl(), '/'.$params) !== false) {
-					$request->setModuleName('catalog')->setControllerName('product')->setActionName('view')->setParam('id', $id);
-					$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
-					return true;
-				}
-				// => redirige le produit vers la bonne url
-				else if ($id > 0) {
-					header('Location: '.$product->getProductUrl(), true, 301);
-					exit(0);
-				}
-
-				// si le produit n'existe pas ou plus (plutôt plus que pas...)
-				// on recherche le bon produit dans l'attribut oldids
-				// => redirige le produit vers la bonne url
-				if (strlen($oldids) > 0) {
-
-					$product = Mage::getResourceModel('catalog/product_collection');
-					$product->addAttributeToFilter($oldids, array('regexp' => '[[:<:]]'.$id.'[[:>:]]'));
-					$product = $product->getFirstItem();
-
-					if ($product->getId() > 0) {
-						header('Location: '.$product->getProductUrl(), true, 301);
-						exit(0);
+					else {
+						//$products->getSelect()->reset(Zend_Db_Select::WHERE);
+						//$products->getSelect()->where('at_oldids.value regexp "[[:<:]]'.$id.'[[:>:]]"');
 					}
+
+					$candidates = $products->getAllIds();
+				}
+
+
+				// SI NOUS AVONS DES CANDIDATS
+				// soit dans le ou les ids produits parents (dans le cas d'un produit non visible)
+				// soit dans le produit chargé initialement
+				// soit dans le ou les ids produits de remplacement
+				while (!empty($candidates)) {
+
+					$product = array_shift($candidates); // un id ou un objet produit (du premier au dernier)
+					$product = (is_object($product)) ? $product : Mage::getModel('catalog/product')->load($product);
+
+					// le produit existe (le contraire est possible via l'attribut oldids)
+					// le produit est activé (le contraire est possible via l'attribut oldids ou via les produits associés)
+					// le produit est visible (le contraire est possible via l'attribut oldids ou via les produits associés)
+					if (!empty($product->getId()) &&
+					    ($product->getData('status') == Mage_Catalog_Model_Product_Status::STATUS_ENABLED) &&
+					    ($product->getData('visibility') != Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE)) {
+
+						if (strpos($product->getProductUrl(), '/'.$params) === false) {
+							header('Location: '.$product->getProductUrl(), true, 301);
+							exit(0); // stop redirection 301
+						}
+						else {
+							// todo v2.4, la catégorie pour le fil d'ariane et le menu
+							$request->setModuleName('catalog')->setControllerName('product')->setActionName('view');
+							$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
+							$request->setParam('id', $id);
+							return true;
+						}
+					}
+
+					$product->reset();
 				}
 			}
 		}

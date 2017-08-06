@@ -1,11 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/08/07/2016
- * Version 14
+ * Updated S/06/05/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -25,30 +25,36 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$storeId    = ($product->getStoreId() > 0) ? $product->getStoreId() : Mage::app()->getStore()->getStoreId();
-			$attributes = array_filter(explode(' ', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
-			$ignores    = array_filter(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/ignore'))));
+			$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
+			$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
 			$data = array();
 
 			foreach ($attributes as $attribute) {
 
 				$source = $product->getResource()->getAttribute($attribute);
+				$model = Mage::getResourceModel('catalog/product');
 
-				// $product->getData($attribute) = '' si un attribut liste déroulante n'a pas de valeur (backend_type = int)
-				// getAttributeRawValue uniquement si on demande la valeur pour une autre vue magasin
-				if (is_object($source) && ($source->getBackendType() === 'varchar'))
-					$value = ($storeId == Mage::app()->getStore()->getStoreId()) ? $product->getData($attribute) :
-						Mage::getResourceModel('catalog/product')->getAttributeRawValue($product->getId(), $attribute, $storeId);
-				else
-					$value = (strlen($product->getData($attribute)) < 1) ? '' : $source->setStoreId($storeId)->getFrontend()->getValue($product);
+				// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
+				// http://stackoverflow.com/a/30519730
+				if (is_object($source) && in_array($source->getData('frontend_input'), array('select', 'multiselect'))) {
+					$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
+					$value = $model->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
+				}
+				else if (is_object($source)) {
+					$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
+				}
+				else {
+					$value = $product->getData($attribute);
+				}
 
 				$value = Mage::helper('urlnosql')->normalizeChars(strtolower($value));
 				$value = preg_replace('#[^a-z0-9\-]#', '', $value);
 
-				if ((strlen($value) > 0) && !in_array($value, $ignores))
+				if (!empty($value) && !in_array($value, $ignores))
 					array_push($data, $value);
 			}
 
-			$data = implode('-', $data);
+			$data = implode('-', $data); // est vide si le produit n'existe pas
 			return Mage::app()->getStore($storeId)->getBaseUrl().$data.Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 		}
 		else {

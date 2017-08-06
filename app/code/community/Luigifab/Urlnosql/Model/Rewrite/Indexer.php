@@ -1,11 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/08/07/2016
- * Version 3
+ * Updated M/28/02/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -38,7 +38,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			if (isset($data['rewrite_category_ids'])) {
+			if (!empty($data['rewrite_category_ids'])) {
 
 				if (version_compare(Mage::getVersion(), '1.5', '>='))
 					$urlModel->clearStoreInvalidRewrites(); // Maybe some categories were moved
@@ -52,7 +52,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 			if ($dataObject instanceof Varien_Object && $dataObject->hasData('save_rewrites_history'))
 				$urlModel->setShouldSaveRewritesHistory($dataObject->getData('save_rewrites_history')); // Force rewrites history saving
 
-			if (isset($data['rewrite_product_ids'])) {
+			if (!empty($data['rewrite_product_ids'])) {
 
 				if (version_compare(Mage::getVersion(), '1.5', '>='))
 					$urlModel->clearStoreInvalidRewrites(); // Maybe some products were moved or removed from website
@@ -61,7 +61,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 					$urlModel->refreshProductRewrite($productId);
 			}
 
-			if (isset($data['rewrite_category_ids'])) {
+			if (!empty($data['rewrite_category_ids'])) {
 
 				if (version_compare(Mage::getVersion(), '1.5', '>='))
 					$urlModel->clearStoreInvalidRewrites(); // Maybe some categories were moved

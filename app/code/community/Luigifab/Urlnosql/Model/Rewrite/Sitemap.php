@@ -1,11 +1,11 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated V/08/07/2016
- * Version 7
+ * Updated S/06/05/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -39,16 +39,17 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 
 			if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-				$product = Mage::getResourceModel('catalog/product_collection');
-				$product->addAttributeToSelect(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/attributes'))));
-				$product->addAttributeToFilter('entity_id', $entity->getId());
-				$product = $product->getFirstItem()->setStoreId($this->storeId);
+				$product = Mage::getResourceModel('catalog/product_collection')
+					->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
+					->addAttributeToFilter('entity_id', $entity->getId())
+					->getFirstItem()
+					->setStoreId($this->storeId);
 
 				$url = $product->getProductUrl();
 				$url = substr($url, strrpos($url, '/') + 1);
 
-				$entity->setUrl($url);
-				$entity->setSku($product->getSku());
+				$entity->setData('url', $url);
+				$entity->setData('sku', $product->getData('sku'));
 			}
 
 			$entities[$entity->getId()] = $entity;
@@ -64,16 +65,17 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$data = Mage::getResourceModel('catalog/product_collection');
-			$data->addAttributeToSelect(explode(' ', trim(Mage::getStoreConfig('urlnosql/general/attributes'))));
-			$data->addAttributeToFilter('entity_id', $product->getId());
-			$data = $data->getFirstItem()->setStoreId($this->storeId);
+			$data = Mage::getResourceModel('catalog/product_collection')
+				->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
+				->addAttributeToFilter('entity_id', $product->getId())
+				->getFirstItem()
+				->setStoreId($this->storeId);
 
 			$url = $data->getProductUrl();
 			$url = substr($url, strrpos($url, '/') + 1);
 
-			$product->setUrl($url);
-			$product->setSku($data->getSku());
+			$product->setData('url', $url);
+			$product->setData('sku', $data->getData('sku'));
 		}
 
 		return $product;

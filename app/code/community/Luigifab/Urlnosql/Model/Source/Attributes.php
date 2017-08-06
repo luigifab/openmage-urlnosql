@@ -1,11 +1,11 @@
 <?php
 /**
  * Created M/01/03/2016
- * Updated M/08/03/2016
- * Version 2
+ * Updated M/28/02/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -22,11 +22,11 @@ class Luigifab_Urlnosql_Model_Source_Attributes {
 
 	public function toOptionArray() {
 
-		$attributes = Mage::getResourceModel('catalog/product_attribute_collection')
-			->addFieldToFilter('is_unique', 1)
-			->addFieldToFilter('is_global', 1)
-			->addFieldToFilter('frontend_input', 'text')
-			->setOrder('attribute_code', 'ASC');
+		$attributes = Mage::getResourceModel('catalog/product_attribute_collection');
+		$attributes->addFieldToFilter('is_unique', 1);
+		$attributes->addFieldToFilter('is_global', 1);
+		$attributes->addFieldToFilter('frontend_input', 'text');
+		$attributes->setOrder('attribute_code', 'asc');
 
 		$options = array(array('label' => '', 'value' => ''));
 

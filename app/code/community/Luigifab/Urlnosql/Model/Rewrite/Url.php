@@ -1,11 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/08/07/2016
- * Version 5
+ * Updated M/28/02/2017
  *
- * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>, Fabrice Creuzot (luigifab) <code~luigifab~info>
- * https://redmine.luigifab.info/projects/magento/wiki/urlnosql
+ * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * https://www.luigifab.info/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -22,7 +22,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	public function refreshRewrites($storeId = null) {
 
-		if (is_null($storeId)) {
+		if (empty($storeId)) {
 			$stores = $this->getStores();
 			foreach ($stores as $store)
 				$this->refreshRewrites($store->getId());
