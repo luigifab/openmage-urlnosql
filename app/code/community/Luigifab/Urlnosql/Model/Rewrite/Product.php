@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/06/05/2017
+ * Updated V/10/11/2017
  *
- * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.info/magento/urlnosql
  *
@@ -24,7 +24,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$storeId    = ($product->getStoreId() > 0) ? $product->getStoreId() : Mage::app()->getStore()->getStoreId();
+			$storeId    = ($product->getStoreId() > 0) ? $product->getStoreId() : Mage::app()->getStore()->getId();
 			$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 			$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
 			$data = array();
@@ -35,7 +35,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 				$model = Mage::getResourceModel('catalog/product');
 
 				// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
-				// http://stackoverflow.com/a/30519730
+				// https://stackoverflow.com/a/30519730
 				if (is_object($source) && in_array($source->getData('frontend_input'), array('select', 'multiselect'))) {
 					$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
 					$value = $model->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
@@ -47,14 +47,13 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 					$value = $product->getData($attribute);
 				}
 
-				$value = Mage::helper('urlnosql')->normalizeChars(strtolower($value));
-				$value = preg_replace('#[^a-z0-9\-]#', '', $value);
+				$value = Mage::helper('urlnosql')->normalizeChars($value);
 
 				if (!empty($value) && !in_array($value, $ignores))
 					array_push($data, $value);
 			}
 
-			$data = implode('-', $data); // est vide si le produit n'existe pas
+			$data = preg_replace('#\-{2,}#', '-', implode('-', $data)); // est vide si le produit n'existe pas
 			return Mage::app()->getStore($storeId)->getBaseUrl().$data.Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 		}
 		else {

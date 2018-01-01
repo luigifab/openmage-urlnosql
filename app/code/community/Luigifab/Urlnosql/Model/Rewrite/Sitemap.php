@@ -3,7 +3,7 @@
  * Created L/29/06/2015
  * Updated S/06/05/2017
  *
- * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.info/magento/urlnosql
  *

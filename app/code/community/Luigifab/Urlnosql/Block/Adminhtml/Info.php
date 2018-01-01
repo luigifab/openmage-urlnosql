@@ -1,9 +1,9 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/06/05/2017
+ * Updated S/11/11/2017
  *
- * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.info/magento/urlnosql
  *
@@ -21,7 +21,7 @@
 class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
 
 	public function getTabLabel() {
-		return $this->__('Product url rewrite');
+		return $this->__('Product URL rewrite');
 	}
 
 	public function getTabTitle() {
@@ -40,7 +40,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 		$product = clone Mage::registry('current_product');
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
-		$storeId = $this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getStoreId());
+		$storeId = $this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId());
 
 		$current    = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
 		$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
@@ -51,20 +51,20 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		// format de l'url
 		// pour information (liste des attributs, liste des valeurs à ignorer, ce produit remplace)
 		if (count($ignores) > 0)
-			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix()).'<br />'.$this->__('Ignore values: %s.', implode(', ', $ignores)).'</p>';
+			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix()).'<br />'.$this->__('Ignore following values: %s.', implode(', ', $ignores)).'</p>';
 		else
-			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix()).'</p>';
+			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix()).'</p>';
 
 		$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
 		if (!empty($oldids) && !empty($product->getData($oldids)))
-			$html[] = '<p>'.$this->__('This product replace old products: %s.', $product->getData($oldids)).'</p>';
+			$html[] = '<p>'.$this->__('This product replaces the following deleted products (via the <em>%s</em> attribute): %s.', $oldids, str_replace(',', ', ', $product->getData($oldids))).'</p>';
 
 		// détail de l'url
 		// pour la vue magasin par défaut, ou pour la vue magasin sélectionnée
 		$css = $this->getSkinUrl('images/error_msg_icon.gif');
 		$css = 'style="margin-left:8px; padding-left:19px; background:url(\''.$css.'\') no-repeat left center;"';
 
-		$html[] = '<p style="margin:1em 0 0;">'.$this->__('Address description for store view #%d:', $storeId).'</p>';
+		$html[] = '<p style="margin:1em 0 0;">'.$this->__('Address description for the store view #%d:', $storeId).'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; line-height:110%; list-style:inside;">';
 
 		foreach ($attributes as $attribute) {
@@ -73,7 +73,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			$model = Mage::getResourceModel('catalog/product');
 
 			// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
-			// http://stackoverflow.com/a/30519730
+			// https://stackoverflow.com/a/30519730
 			if (is_object($source) && in_array($source->getData('frontend_input'), array('select', 'multiselect'))) {
 				$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
 				$value = $model->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
@@ -85,13 +85,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 				$value = $product->getData($attribute);
 			}
 
-			$value = $this->helper('urlnosql')->normalizeChars(strtolower($value));
-			$value = preg_replace('#[^a-z0-9\-]#', '', $value);
+			$value = $this->helper('urlnosql')->normalizeChars($value);
 
-			if (($attribute !== 'entity_id') && !is_object($source)) {
+			if (($attribute != 'entity_id') && !is_object($source)) {
 				$html[] = '<li>'.$this->__('%s <span %s>Warning! This attribute does not exist.</span>', $attribute, $css).'</li>';
 			}
-			else if (($attribute !== 'entity_id') && ($source->getData('used_in_product_listing') !== '1')) {
+			else if (($attribute != 'entity_id') && empty($source->getData('used_in_product_listing'))) {
 
 				$url = $this->getUrl('*/catalog_product_attribute/edit', array('attribute_id' => $source->getId()));
 				$url = 'href="'.$url.'" onclick="window.open(this.href); return false;"';
@@ -108,19 +107,19 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 		$html[] = '</ul>';
 
-		// génération des urls
+		// génération des URLs
 		// pour toutes les vues magasins activées
 		$html[] = '<p style="margin:1em 0 0;">'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
 		foreach ($stores as $store) {
 
-			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getStoreId()), 0, 2);
+			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getId()), 0, 2);
 
-			if ($lang !== $current)
-				$html[] = '<li>'.$this->__('(%d) <span lang="%s">%s</span>:', $store->getStoreId(), $lang, $store->getData('name')).' <a href="'.$product->setStoreId($store->getStoreId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
+			if ($lang != $current)
+				$html[] = '<li>'.$this->__('(%d) <span lang="%s">%s</span>:', $store->getId(), $lang, $store->getData('name')).' <a href="'.$product->setStoreId($store->getId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
 			else
-				$html[] = '<li>'.$this->__('(%d) %s:', $store->getStoreId(), $store->getData('name')).' <a href="'.$product->setStoreId($store->getStoreId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
+				$html[] = '<li>'.$this->__('(%d) %s:', $store->getId(), $store->getData('name')).' <a href="'.$product->setStoreId($store->getId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
 		}
 
 		$html[] = '</ul>';

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/01/03/2016
- * Updated M/28/02/2017
+ * Updated W/11/10/2017
  *
- * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.info/magento/urlnosql
  *
@@ -18,7 +18,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Model_Source_Attributes {
+class Luigifab_Urlnosql_Model_Source_Attribute {
 
 	public function toOptionArray() {
 
@@ -31,7 +31,7 @@ class Luigifab_Urlnosql_Model_Source_Attributes {
 		$options = array(array('label' => '', 'value' => ''));
 
 		foreach ($attributes as $attribute)
-			array_push($options, array('label' => $attribute->getData('attribute_code'), 'value' => $attribute->getData('attribute_code')));
+			array_push($options, array('value' => $attribute->getData('attribute_code'), 'label' => $attribute->getData('attribute_code')));
 
 		return $options;
 	}

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/28/02/2017
+ * Updated J/09/11/2017
  *
- * Copyright 2015-2017 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.info/magento/urlnosql
  *
@@ -24,10 +24,11 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 		return (string) Mage::getConfig()->getModuleConfig('Luigifab_Urlnosql')->version;
 	}
 
-	public function normalizeChars($s) {
+	public function normalizeChars($string) {
 
-		// http://stackoverflow.com/a/16427125/2980105
+		// https://stackoverflow.com/a/16427125
 		$replace = array(
+			' ' => '-',
 			'ъ' => '-', 'Ь' => '-', 'Ъ' => '-', 'ь' => '-',
 			'Ă' => 'A', 'Ą' => 'A', 'À' => 'A', 'Ã' => 'A', 'Á' => 'A', 'Æ' => 'A', 'Â' => 'A', 'Å' => 'A', 'Ä' => 'Ae',
 			'Þ' => 'B',
@@ -70,6 +71,6 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 			'Ы' => 'y', 'ž' => 'z', 'З' => 'z', 'з' => 'z', 'ź' => 'z', 'ז' => 'z', 'ż' => 'z', 'ſ' => 'z', 'Ж' => 'zh', 'ж' => 'zh'
 		);
 
-		return strtr($s, $replace);
+		return trim(preg_replace('#[^a-z0-9\-]#', '', strtr(strtolower($string), $replace)), '-');
 	}
 }
