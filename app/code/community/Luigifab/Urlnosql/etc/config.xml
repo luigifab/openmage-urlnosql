@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated S/16/09/2017
+ * Updated L/01/01/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Luigifab_Urlnosql>
-			<version>2.4.0</version>
+			<version>2.5.0</version>
 		</Luigifab_Urlnosql>
 	</modules>
 	<global>
@@ -66,10 +66,10 @@
 		<events>
 			<controller_front_init_routers>
 				<observers>
-					<urlnosql_router>
+					<urlnosql_match_producturl>
 						<class>Luigifab_Urlnosql_Controller_Router</class>
 						<method>initControllerRouters</method>
-					</urlnosql_router>
+					</urlnosql_match_producturl>
 				</observers>
 			</controller_front_init_routers>
 		</events>
@@ -92,4 +92,16 @@
 			</modules>
 		</translate>
 	</adminhtml>
+	<frontend>
+		<events>
+			<catalog_controller_product_init_before>
+				<observers>
+					<urlnosql_update_category>
+						<class>urlnosql/observer</class>
+						<method>updateCategoryId</method>
+					</urlnosql_update_category>
+				</observers>
+			</catalog_controller_product_init_before>
+		</events>
+	</frontend>
 </config>

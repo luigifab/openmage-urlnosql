@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated S/02/12/2017
+ * Updated L/01/01/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -22,10 +22,8 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 	public function initControllerRouters($observer) {
 
-		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
-			$router = new Luigifab_Urlnosql_Controller_Router();
-			$this->match(Mage::app()->getRequest());
-		}
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
+			$observer->getData('front')->addRouter('urlnosql', $this);
 	}
 
 	public function match(Zend_Controller_Request_Http $request) {
@@ -138,12 +136,9 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 						exit(0); // stop redirection 301
 					}
 					else {
-						// todo v2.5 la catégorie pour le fil d'ariane et le menu
-						// $product->getCategoryIds()
-						// Mage::getResourceModel('catalog/category_collection')
-
 						$request->setModuleName('catalog')->setControllerName('product')->setActionName('view');
 						$request->setAlias(Mage_Core_Model_Url_Rewrite::REWRITE_REQUEST_PATH_ALIAS, $params);
+						$request->setParam('category_ids', $product->getCategoryIds());
 						$request->setParam('id', $id);
 						return true;
 					}
