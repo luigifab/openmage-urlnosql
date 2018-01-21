@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/10/11/2017
+ * Updated S/20/01/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -27,12 +27,13 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 			$storeId    = ($product->getStoreId() > 0) ? $product->getStoreId() : Mage::app()->getStore()->getId();
 			$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 			$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
+
 			$data = array();
 
 			foreach ($attributes as $attribute) {
 
 				$source = $product->getResource()->getAttribute($attribute);
-				$model = Mage::getResourceModel('catalog/product');
+				$model  = Mage::getResourceModel('catalog/product');
 
 				// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
 				// https://stackoverflow.com/a/30519730
@@ -53,8 +54,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 					array_push($data, $value);
 			}
 
-			$data = preg_replace('#\-{2,}#', '-', implode('-', $data)); // est vide si le produit n'existe pas
-			return Mage::app()->getStore($storeId)->getBaseUrl().$data.Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
+			return Mage::app()->getStore($storeId)->getBaseUrl().
+				preg_replace('#\-{2,}#', '-', implode('-', $data)).             // est vide si le produit n'existe pas
+				Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 		}
 		else {
 			return parent::getUrl($product, $params);

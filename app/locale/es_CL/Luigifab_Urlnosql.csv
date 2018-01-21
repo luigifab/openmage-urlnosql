@@ -11,7 +11,6 @@
 "Example with the latest created product","Ejemplo con el último producto creado"
 "Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).","Desactivado si Ud usa el módulo <strong lang=""en"">urlnosql</strong> (ver {{Reescritura de URL de producto}})."
 "Format: <strong>www.example.org/%s%s</strong>","Formato: <strong>www.ejemplo.org/<span lang=""en"">%s</span>%s</strong>"
-"Ignore following values: %s.","Ignorar los valores siguientes: %s."
 "This product replaces the following deleted products (via the <em>%s</em> attribute): %s.","Este producto sustituye los siguientes productos eliminados (vía el atributo <em lang=""en"">%s</em>): %s."
 "Address description for the store view #%d:","Descripción de la dirección para la vista tienda n°%d:"
 "%s <span %s>Warning! This attribute does not exist.</span>","<span lang=""en"">%s</span> <span %s>¡Cuidado! Este atributo no existe.</span>"

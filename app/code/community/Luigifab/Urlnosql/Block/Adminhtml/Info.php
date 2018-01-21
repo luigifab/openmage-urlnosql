@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/11/11/2017
+ * Updated S/20/01/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -38,26 +38,25 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 	public function getHtml() {
 
-		$product = clone Mage::registry('current_product');
-		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
-		$storeId = $this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId());
-
-		$current    = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+		$product    = clone Mage::registry('current_product');
+		$adminLang  = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+		$stores     = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
+		$storeId    = intval($this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId()));
 		$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 		$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
+		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
 
 		$html = array();
 
 		// format de l'url
-		// pour information (liste des attributs, liste des valeurs à ignorer, ce produit remplace)
-		if (count($ignores) > 0)
-			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix()).'<br />'.$this->__('Ignore following values: %s.', implode(', ', $ignores)).'</p>';
-		else
+		// affiche la liste des attributs et ce produit remplace
+		if (!empty($oldids) && !empty($product->getData($oldids))) {
+			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix());
+			$html[] = '<br />'.$this->__('This product replaces the following deleted products (via the <em>%s</em> attribute): %s.', $oldids, str_replace(',', ', ', $product->getData($oldids))).'</p>';
+		}
+		else {
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>', str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix()).'</p>';
-
-		$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
-		if (!empty($oldids) && !empty($product->getData($oldids)))
-			$html[] = '<p>'.$this->__('This product replaces the following deleted products (via the <em>%s</em> attribute): %s.', $oldids, str_replace(',', ', ', $product->getData($oldids))).'</p>';
+		}
 
 		// détail de l'url
 		// pour la vue magasin par défaut, ou pour la vue magasin sélectionnée
@@ -70,7 +69,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		foreach ($attributes as $attribute) {
 
 			$source = $product->getResource()->getAttribute($attribute);
-			$model = Mage::getResourceModel('catalog/product');
+			$model  = Mage::getResourceModel('catalog/product');
 
 			// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
 			// https://stackoverflow.com/a/30519730
@@ -93,7 +92,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			else if (($attribute != 'entity_id') && empty($source->getData('used_in_product_listing'))) {
 
 				$url = $this->getUrl('*/catalog_product_attribute/edit', array('attribute_id' => $source->getId()));
-				$url = 'href="'.$url.'" onclick="window.open(this.href); return false;"';
+				$url = 'href="'.$url.'"';
 
 				if (!empty($value))
 					$html[] = '<li>'.$this->__('%s: %s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>', $attribute, $value, $css, $url).'</li>';
@@ -115,11 +114,25 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		foreach ($stores as $store) {
 
 			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getId()), 0, 2);
+			$url  = $product->setStoreId($store->getId())->getProductUrl();
+			$mark = (($stores->getSize() > 1) && ($storeId == $store->getId()));
 
-			if ($lang != $current)
-				$html[] = '<li>'.$this->__('(%d) <span lang="%s">%s</span>:', $store->getId(), $lang, $store->getData('name')).' <a href="'.$product->setStoreId($store->getId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
-			else
-				$html[] = '<li>'.$this->__('(%d) %s:', $store->getId(), $store->getData('name')).' <a href="'.$product->setStoreId($store->getId())->getProductUrl().'" onclick="window.open(this.href); return false;">'.$product->getProductUrl().'</a></li>';
+			if ($lang != $adminLang) {
+				$html[] = '<li>'.
+					($mark ? '<strong>' : '').
+						$this->__('(%d) <span lang="%s">%s</span>:', $store->getId(), $lang, $store->getData('name')).
+						' <a href="'.$url.'">'.$url.'</a>'.
+					($mark ? '</strong>' : '').
+				'</li>';
+			}
+			else {
+				$html[] = '<li>'.
+					($mark ? '<strong>' : '').
+						$this->__('(%d) %s:', $store->getId(), $store->getData('name')).
+						' <a href="'.$url.'">'.$url.'</a>'.
+					($mark ? '</strong>' : '').
+				'</li>';
+			}
 		}
 
 		$html[] = '</ul>';
@@ -128,14 +141,14 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 	public function _toHtml() {
 
-		$html = array();
+		$html   = array();
 		$html[] = '<div class="entry-edit">';
 		$html[] = '<div class="entry-edit-head">';
 		$html[] = '<h4 class="icon-head head-edit-form fieldset-legend">'.$this->getTabLabel().'</h4>';
 		$html[] = '</div>';
 		$html[] = '<fieldset>';
 		$html[] = '<legend>'.$this->getTabLabel().'</legend>';
-		$html = array_merge($html, $this->getHtml());
+		$html   = array_merge($html, $this->getHtml());
 		$html[] = '</fieldset>';
 		$html[] = '</div>';
 

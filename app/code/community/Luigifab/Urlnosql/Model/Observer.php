@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated L/01/01/2018
+ * Updated S/20/01/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -25,7 +25,7 @@ class Luigifab_Urlnosql_Model_Observer {
 
 		$request = $observer->getData('controller_action')->getRequest();
 		$params  = $observer->getData('params'); // Magento 1.7 et +
-		$ids = $request->getParam('category_ids');
+		$ids     = $request->getParam('category_ids');
 
 		if (!empty($ids) && is_array($ids)) {
 
