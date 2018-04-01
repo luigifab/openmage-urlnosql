@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated S/06/05/2017
+ * Updated S/25/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -27,6 +27,30 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 		return parent::getCollection($storeId);
 	}
 
+	// Magento 1.4 à 1.7
+	protected function _prepareProduct(array $productRow) {
+
+		$product = parent::_prepareProduct($productRow);
+
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
+
+			$data = Mage::getResourceModel('catalog/product_collection')
+				->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
+				->addAttributeToFilter('entity_id', $product->getId())
+				->setPageSize(1)
+				->getFirstItem()
+				->setStoreId($this->storeId);
+
+			$url = $data->getProductUrl();
+			$url = substr($url, strrpos($url, '/') + 1);
+
+			$product->setData('url', $url);
+			$product->setData('sku', $data->getData('sku'));
+		}
+
+		return $product;
+	}
+
 	// Magento 1.8 et +
 	protected function _loadEntities() {
 
@@ -39,45 +63,23 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 
 			if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-				$product = Mage::getResourceModel('catalog/product_collection')
+				$data = Mage::getResourceModel('catalog/product_collection')
 					->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
 					->addAttributeToFilter('entity_id', $entity->getId())
+					->setPageSize(1)
 					->getFirstItem()
 					->setStoreId($this->storeId);
 
-				$url = $product->getProductUrl();
+				$url = $data->getProductUrl();
 				$url = substr($url, strrpos($url, '/') + 1);
 
 				$entity->setData('url', $url);
-				$entity->setData('sku', $product->getData('sku'));
+				$entity->setData('sku', $data->getData('sku'));
 			}
 
 			$entities[$entity->getId()] = $entity;
 		}
 
 		return $entities;
-	}
-
-	// Magento 1.4 à 1.7
-	protected function _prepareProduct(array $productRow) {
-
-		$product = parent::_prepareProduct($productRow);
-
-		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
-
-			$data = Mage::getResourceModel('catalog/product_collection')
-				->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
-				->addAttributeToFilter('entity_id', $product->getId())
-				->getFirstItem()
-				->setStoreId($this->storeId);
-
-			$url = $data->getProductUrl();
-			$url = substr($url, strrpos($url, '/') + 1);
-
-			$product->setData('url', $url);
-			$product->setData('sku', $data->getData('sku'));
-		}
-
-		return $product;
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/01/01/2018
+ * Updated M/27/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -48,16 +48,16 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 		if (empty($id)) {
 
-			$params = '///';
-
-			$model = Mage::getResourceModel('core/url_rewrite_collection')
+			$params  = '///';
+			$rewrite = Mage::getResourceModel('core/url_rewrite_collection')
 				->addFieldToFilter('store_id', Mage::app()->getStore()->getId())
 				->addFieldToFilter('request_path', substr($request->getPathInfo(), 1))
 				->addFieldToFilter('product_id', array('gt' => 0))
+				->setPageSize(1)
 				->getFirstItem();
 
-			if (!empty($model->getData('product_id')))
-				$id = $model->getData('product_id');
+			if (!empty($rewrite->getData('product_id')))
+				$id = $rewrite->getData('product_id');
 		}
 
 		// action

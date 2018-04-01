@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated M/28/02/2017
+ * Updated S/17/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -24,27 +24,17 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$oldids = Mage::getStoreConfig('urlnosql/general/oldids');
+			$oldids  = Mage::getStoreConfig('urlnosql/general/oldids');
+			$product = Mage::getResourceModel('catalog/product_collection')
+				->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)))
+				->addAttributeToFilter('visibility', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
+				->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
+				->addAttributeToSort('created_at', 'desc')
+				->setPageSize(1)
+				->getFirstItem();
 
-			$products = Mage::getResourceModel('catalog/product_collection');
-			$products->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)));
-			$products->addAttributeToFilter('visibility', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE));
-			$products->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED);
-			$products->addAttributeToSort('created_at', 'desc');
-			$products->setPageSize(1);
-
-			if (!empty($products->getFirstItem()->getId())) {
-
-				Mage::register('current_product', $products->getFirstItem());
-
-				$html  = '<div class="entry-edit-head collapseable"><strong>'.$element->getData('legend').'</strong></div>'."\n";
-				$html .= '<fieldset class="'.$this->_getFieldsetCss().'">'."\n";
-				$html .=  '<legend>'.$element->getData('legend').'</legend>'."\n";
-				$html .=  implode("\n", Mage::getBlockSingleton('urlnosql/adminhtml_info')->getHtml())."\n";
-				$html .= '</fieldset>';
-
-				return $html;
-			}
+			if (!empty($product->getId()))
+				return Mage::getBlockSingleton('urlnosql/adminhtml_info')->_toHtml($element->getData('legend'), $product);
 		}
 	}
 }

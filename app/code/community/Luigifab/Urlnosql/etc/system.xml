@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated L/01/01/2018
+ * Updated V/23/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -29,7 +29,7 @@
 		<urlnosql translate="label">
 			<label>Product URL rewrite</label>
 			<tab>luigifab</tab>
-			<sort_order>71</sort_order>
+			<sort_order>90</sort_order>
 			<show_in_default>1</show_in_default>
 			<show_in_website>0</show_in_website>
 			<show_in_store>0</show_in_store>

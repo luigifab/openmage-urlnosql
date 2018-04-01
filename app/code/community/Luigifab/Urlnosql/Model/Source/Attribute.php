@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/01/03/2016
- * Updated W/11/10/2017
+ * Updated M/27/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>

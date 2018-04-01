@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/20/01/2018
+ * Updated M/27/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -28,25 +28,36 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		return null;
 	}
 
-	public function canShowTab() {
-		return (is_object(Mage::registry('current_product'))) ? true : false;
-	}
-
 	public function isHidden() {
 		return false;
 	}
 
-	public function getHtml() {
+	public function canShowTab() {
+		return (is_object(Mage::registry('current_product'))) ? true : false;
+	}
 
-		$product    = clone Mage::registry('current_product');
+	public function _toHtml($title = true, $product = null) {
+
+		if (!is_object($product))
+			$product = clone Mage::registry('current_product');
+
 		$adminLang  = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
-		$stores     = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
 		$storeId    = intval($this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId()));
 		$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 		$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
 
 		$html = array();
+
+		if ($title === true) {
+			$html[] = '<div class="entry-edit">';
+			$html[] = '<div class="entry-edit-head"><h4 class="icon-head head-edit-form fieldset-legend">'.$this->getTabLabel().'</h4></div>';
+			$html[] = '<fieldset><legend>'.$this->getTabLabel().'</legend>';
+		}
+		else {
+			$html[] = '<div class="entry-edit-head"><strong>'.$title.'</strong></div>';
+			$html[] = '<fieldset clas="config"><legend>'.$title.'</legend>';
+		}
 
 		// format de l'url
 		// affiche la liste des attributs et ce produit remplace
@@ -69,7 +80,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		foreach ($attributes as $attribute) {
 
 			$source = $product->getResource()->getAttribute($attribute);
-			$model  = Mage::getResourceModel('catalog/product');
+			$model = Mage::getResourceModel('catalog/product');
 
 			// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
 			// https://stackoverflow.com/a/30519730
@@ -111,11 +122,14 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$html[] = '<p style="margin:1em 0 0;">'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
+		$stores = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
+		$size = $stores->getSize();
+
 		foreach ($stores as $store) {
 
 			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getId()), 0, 2);
 			$url  = $product->setStoreId($store->getId())->getProductUrl();
-			$mark = (($stores->getSize() > 1) && ($storeId == $store->getId()));
+			$mark = (($size > 1) && ($storeId == $store->getId()));
 
 			if ($lang != $adminLang) {
 				$html[] = '<li>'.
@@ -136,21 +150,10 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		}
 
 		$html[] = '</ul>';
-		return $html;
-	}
-
-	public function _toHtml() {
-
-		$html   = array();
-		$html[] = '<div class="entry-edit">';
-		$html[] = '<div class="entry-edit-head">';
-		$html[] = '<h4 class="icon-head head-edit-form fieldset-legend">'.$this->getTabLabel().'</h4>';
-		$html[] = '</div>';
-		$html[] = '<fieldset>';
-		$html[] = '<legend>'.$this->getTabLabel().'</legend>';
-		$html   = array_merge($html, $this->getHtml());
 		$html[] = '</fieldset>';
-		$html[] = '</div>';
+
+		if ($title === true)
+			$html[] = '</div>';
 
 		return implode("\n", $html);
 	}

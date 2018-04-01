@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated J/07/09/2017
+ * Updated V/23/02/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -33,7 +33,7 @@
 										<children-->
 											<urlnosql translate="title">
 												<title>Product URL rewrite</title>
-												<sort_order>103071</sort_order>
+												<sort_order>103090</sort_order>
 											</urlnosql>
 										<!--/children>
 									</luigifab-->

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated W/06/12/2017
+ * Updated J/01/03/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -28,7 +28,10 @@ class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Bl
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && is_object(Mage::registry('current_product'))) {
 
-			$html = str_replace(array('disabled="disabled"', 'id=""', '<label', '<input'), array('', '', '<label style="color:gray;" ', '<input disabled="disabled" '), parent::getElementHtml()).' <p class="note" style="width:auto;">'.$this->__('Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).').'</p>';
+			$html = str_replace(
+				array('disabled="disabled"', 'id=""', '<label', '<input'),
+				array('', '', '<label style="color:gray;" ', '<input disabled="disabled" '),
+				parent::getElementHtml()).' <p class="note" style="width:auto;">'.$this->__('Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).').'</p>';
 
 			$html = str_replace('{{', '<a href="'.$this->getUrl('*/*/edit', array('section' => 'urlnosql')).'">', $html);
 			$html = str_replace('}}', '</a>', $html);
