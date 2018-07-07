@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/19/01/2018
+ * Updated M/22/05/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,11 +21,7 @@
 class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block_Abstract implements Varien_Data_Form_Element_Renderer_Interface {
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
-
-		return sprintf(
-			'<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>',
-			$this->helper('urlnosql')->getVersion(),
-			'luigifab.info/magento/urlnosql'
-		);
+		return sprintf('<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>',
+			$this->helper('urlnosql')->getVersion(), 'luigifab.info/magento/urlnosql');
 	}
 }
