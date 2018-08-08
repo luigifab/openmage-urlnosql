@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/28/02/2017
+ * Updated L/16/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -70,5 +70,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer
 					$urlModel->refreshCategoryRewrite($categoryId);
 			}
 		}
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

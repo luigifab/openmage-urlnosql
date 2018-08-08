@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated S/25/02/2018
+ * Updated S/21/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -35,7 +35,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$data = Mage::getResourceModel('catalog/product_collection')
-				->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
+				->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes'))))
 				->addAttributeToFilter('entity_id', $product->getId())
 				->setPageSize(1)
 				->getFirstItem()
@@ -64,7 +64,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 			if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 				$data = Mage::getResourceModel('catalog/product_collection')
-					->addAttributeToSelect(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/attributes')))
+					->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes'))))
 					->addAttributeToFilter('entity_id', $entity->getId())
 					->setPageSize(1)
 					->getFirstItem()
@@ -81,5 +81,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 		}
 
 		return $entities;
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

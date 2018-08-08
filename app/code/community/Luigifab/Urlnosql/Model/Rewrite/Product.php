@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/21/05/2018
+ * Updated S/21/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -25,8 +25,8 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$storeId    = (!empty($product->getStoreId())) ? $product->getStoreId() : Mage::app()->getStore()->getId();
-			$attributes = array_filter(preg_split('#\s#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
-			$ignores    = array_filter(preg_split('#\s#', Mage::getStoreConfig('urlnosql/general/ignore')));
+			$attributes = array_filter(preg_split('#\s+#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
+			$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
 
 			$data = array();
 
@@ -61,5 +61,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product
 		else {
 			return parent::getUrl($product, $params);
 		}
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

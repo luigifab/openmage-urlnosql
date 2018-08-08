@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/30/06/2015
- * Updated M/28/02/2017
+ * Updated L/16/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -26,5 +26,9 @@ class Luigifab_Urlnosql_Model_Rewrite_AttrProdUrlkey extends Mage_Catalog_Model_
 
 	public function afterSave($object) {
 		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::afterSave($object);
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

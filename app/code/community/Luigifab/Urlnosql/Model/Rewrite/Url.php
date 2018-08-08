@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/27/02/2018
+ * Updated L/16/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -60,5 +60,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 
 	protected function _saveRewriteHistory($rewriteData, $rewrite) {
 		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::_saveRewriteHistory($rewriteData, $rewrite);
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

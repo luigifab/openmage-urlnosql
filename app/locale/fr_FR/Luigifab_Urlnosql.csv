@@ -10,6 +10,8 @@
 "When displaying the modification page of a product in the backend.","Lors de l'affichage de la page de modification d'un produit dans le back-office."
 "Example with the latest created product","Exemple avec le dernier produit créé"
 "Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).","Désactivé lorsque vous utilisez le module <strong lang=""en"">urlnosql</strong> (voir {{Réécriture d'URL produit}})."
+"INCOMPLETE MODULE INSTALLATION","INSTALLATION INCOMPLÈTE DU MODULE"
+"There is conflict (<em>%s</em>).","Il y a un conflit (<em lang=""en"">%s</em>)."
 "Format: <strong>www.example.org/%s%s</strong>","Format : <strong>www.exemple.org/<span lang=""en"">%s</span>%s</strong>"
 "This product replaces the following deleted products (via the <em>%s</em> attribute): %s.","Ce produit remplace les produits supprimés suivants (via l'attribut <em lang=""en"">%s</em>) : %s."
 "Address description for the store view #%d:","Description de l'adresse pour la vue magasin n°%d :"

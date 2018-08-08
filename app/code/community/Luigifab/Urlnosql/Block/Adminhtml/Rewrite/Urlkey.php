@@ -1,7 +1,7 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated J/01/03/2018
+ * Updated L/16/07/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -41,5 +41,9 @@ class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Bl
 		else {
 			return parent::getElementHtml();
 		}
+	}
+
+	public function specialCheckRewrite() {
+		return true;
 	}
 }

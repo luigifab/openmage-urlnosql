@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated D/20/05/2018
+ * Updated J/02/08/2018
  *
  * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Luigifab_Urlnosql>
-			<version>2.5.4</version>
+			<version>2.6.0</version>
 		</Luigifab_Urlnosql>
 	</modules>
 	<global>
@@ -52,11 +52,6 @@
 					<product_attribute_backend_urlkey>Luigifab_Urlnosql_Model_Rewrite_AttrProdUrlkey</product_attribute_backend_urlkey>
 				</rewrite>
 			</catalog>
-			<catalog_resource>
-				<rewrite>
-					<product_attribute_backend_urlkey>Luigifab_Urlnosql_Model_Rewrite_AttrResourceProdUrlkey</product_attribute_backend_urlkey>
-				</rewrite>
-			</catalog_resource>
 			<sitemap_mysql4>
 				<rewrite>
 					<catalog_product>Luigifab_Urlnosql_Model_Rewrite_Sitemap</catalog_product>
