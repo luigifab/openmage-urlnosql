@@ -3,9 +3,9 @@
  * Created L/03/08/2015
  * Updated S/21/07/2018
  *
- * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * https://www.luigifab.info/magento/urlnosql
+ * https://www.luigifab.fr/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -80,7 +80,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		foreach ($attributes as $attribute) {
 
 			$source = $product->getResource()->getAttribute($attribute);
-			$model = Mage::getResourceModel('catalog/product');
+			$model  = Mage::getResourceModel('catalog/product');
 
 			// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
 			// https://stackoverflow.com/a/30519730

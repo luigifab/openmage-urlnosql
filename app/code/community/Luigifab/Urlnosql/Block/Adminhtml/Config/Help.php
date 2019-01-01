@@ -3,9 +3,9 @@
  * Created V/26/06/2015
  * Updated J/26/07/2018
  *
- * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * https://www.luigifab.info/magento/urlnosql
+ * https://www.luigifab.fr/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -24,12 +24,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 
 		if (($msg = $this->checkRewrites()) === true) {
 			return sprintf('<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>',
-				$this->helper('urlnosql')->getVersion(), 'luigifab.info/magento/urlnosql');
+				$this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql');
 		}
 		else {
 			return sprintf('<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>'.
 				'<p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
-				$this->helper('urlnosql')->getVersion(), 'luigifab.info/magento/urlnosql',
+				$this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 		}

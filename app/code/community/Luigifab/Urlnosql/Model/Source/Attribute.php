@@ -3,9 +3,9 @@
  * Created M/01/03/2016
  * Updated M/27/02/2018
  *
- * Copyright 2015-2018 | Fabrice Creuzot (luigifab) <code~luigifab~info>
+ * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * https://www.luigifab.info/magento/urlnosql
+ * https://www.luigifab.fr/magento/urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
