@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/09/11/2017
+ * Updated M/01/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -71,6 +71,6 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 			'Ы' => 'y', 'ž' => 'z', 'З' => 'z', 'з' => 'z', 'ź' => 'z', 'ז' => 'z', 'ż' => 'z', 'ſ' => 'z', 'Ж' => 'zh', 'ж' => 'zh'
 		);
 
-		return trim(preg_replace('#[^a-z0-9\-]#', '', strtr(strtolower($string), $replace)), '-');
+		return trim(preg_replace('#[^\w\-]#', '', strtr(mb_strtolower($string), $replace)), '-');
 	}
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/16/07/2018
+ * Updated M/15/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -51,15 +51,15 @@ class Luigifab_Urlnosql_Model_Rewrite_Url extends Mage_Catalog_Model_Url {
 	}
 
 	public function refreshProductRewrites($storeId) {
-		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::refreshProductRewrites($storeId);
+		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::refreshProductRewrites($storeId);
 	}
 
 	public function getShouldSaveRewritesHistory($storeId = null) {
-		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? false : parent::getShouldSaveRewritesHistory($storeId);
+		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? false : parent::getShouldSaveRewritesHistory($storeId);
 	}
 
 	protected function _saveRewriteHistory($rewriteData, $rewrite) {
-		return (Mage::getStoreConfigFlag('urlnosql/general/enabled')) ? $this : parent::_saveRewriteHistory($rewriteData, $rewrite);
+		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::_saveRewriteHistory($rewriteData, $rewrite);
 	}
 
 	public function specialCheckRewrite() {

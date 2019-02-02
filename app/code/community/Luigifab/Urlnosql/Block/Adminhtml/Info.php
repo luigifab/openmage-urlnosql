@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/21/07/2018
+ * Updated M/15/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -33,7 +33,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 	}
 
 	public function canShowTab() {
-		return (is_object(Mage::registry('current_product'))) ? true : false;
+		return is_object(Mage::registry('current_product'));
 	}
 
 	public function _toHtml($title = true, $product = null) {
@@ -41,10 +41,9 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		if (!is_object($product))
 			$product = clone Mage::registry('current_product');
 
-		$adminLang  = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
-		$storeId    = intval($this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId()));
 		$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 		$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
+		$storeId    = intval($this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId()));
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
 
 		$html = array();
@@ -56,7 +55,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		}
 		else {
 			$html[] = '<div class="entry-edit-head"><strong>'.$title.'</strong></div>';
-			$html[] = '<fieldset clas="config"><legend>'.$title.'</legend>';
+			$html[] = '<fieldset class="config"><legend>'.$title.'</legend>';
 		}
 
 		// format de l'url
@@ -122,16 +121,17 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$html[] = '<p style="margin:1em 0 0;">'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
+		$locale = mb_substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
 		$stores = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
-		$size = $stores->getSize();
+		$size   = $stores->getSize();
 
 		foreach ($stores as $store) {
 
-			$lang = substr(Mage::getStoreConfig('general/locale/code', $store->getId()), 0, 2);
+			$lang = mb_substr(Mage::getStoreConfig('general/locale/code', $store->getId()), 0, 2);
 			$url  = $product->setStoreId($store->getId())->getProductUrl();
 			$mark = (($size > 1) && ($storeId == $store->getId()));
 
-			if ($lang != $adminLang) {
+			if ($lang != $locale) {
 				$html[] = '<li>'.
 					($mark ? '<strong>' : '').
 						$this->__('(%d) <span lang="%s">%s</span>:', $store->getId(), $lang, $store->getData('name')).

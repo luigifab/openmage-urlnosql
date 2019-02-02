@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/27/02/2018
+ * Updated M/15/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -38,7 +38,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 			// recherche de l'id dans l'url (insensible à la casse)
 			// l'id étant l'id du produit dans Magento :)
-			preg_match('#^([0-9]+)[a-z0-9\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
+			preg_match('#^(\d+)[\w\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
 
 			if (!empty($id[1]) && is_numeric($id[1])) {
 				// Array ( [0] => 300003-abc.html [1] => 300003 )
@@ -51,7 +51,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$params  = '///';
 			$rewrite = Mage::getResourceModel('core/url_rewrite_collection')
 				->addFieldToFilter('store_id', Mage::app()->getStore()->getId())
-				->addFieldToFilter('request_path', substr($request->getPathInfo(), 1))
+				->addFieldToFilter('request_path', mb_substr($request->getPathInfo(), 1))
 				->addFieldToFilter('product_id', array('gt' => 0))
 				->setPageSize(1)
 				->getFirstItem();
@@ -66,7 +66,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$candidates = array();
 
 			$product = Mage::getModel('catalog/product')->load($id);
-			$product = (!empty($product->getId())) ? $product : null;
+			$product = !empty($product->getId()) ? $product : null;
 
 			// si l'url est l'url d'un produit désactivé
 			// c'est la fin des haricots la tout de suite maintenant
@@ -106,10 +106,9 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 					$products->getSelect()->reset(Zend_Db_Select::WHERE);
 					$products->getSelect()->where('_table_oldids.value regexp "[[:<:]]'.$id.'[[:>:]]"');
 				}
-				else {
-					//$products->getSelect()->reset(Zend_Db_Select::WHERE);
-					//$products->getSelect()->where('at_oldids.value regexp "[[:<:]]'.$id.'[[:>:]]"');
-				}
+				//else
+				//	$products->getSelect()->reset(Zend_Db_Select::WHERE);
+				//	$products->getSelect()->where('at_oldids.value regexp "[[:<:]]'.$id.'[[:>:]]"');
 
 				$candidates = $products->getAllIds();
 			}
@@ -122,7 +121,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			while (!empty($candidates)) {
 
 				$product = array_shift($candidates); // un id ou un objet produit (du premier au dernier)
-				$product = (is_object($product)) ? $product : Mage::getModel('catalog/product')->load($product);
+				$product = is_object($product) ? $product : Mage::getModel('catalog/product')->load($product);
 
 				// le produit existe (le contraire est possible via l'attribut oldids)
 				// le produit est activé (le contraire est possible via l'attribut oldids ou via les produits associés)
@@ -131,7 +130,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				    ($product->getData('status') == Mage_Catalog_Model_Product_Status::STATUS_ENABLED) &&
 				    ($product->getData('visibility') != Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE)) {
 
-					if (strpos($product->getProductUrl(), '/'.$params) === false) {
+					if (mb_strpos($product->getProductUrl(), '/'.$params) === false) {
 						header('Location: '.$product->getProductUrl(), true, 301);
 						exit(0); // stop redirection 301
 					}

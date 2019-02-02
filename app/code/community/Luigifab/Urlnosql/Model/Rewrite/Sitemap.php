@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated S/21/07/2018
+ * Updated S/22/12/2018
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -42,7 +42,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 				->setStoreId($this->storeId);
 
 			$url = $data->getProductUrl();
-			$url = substr($url, strrpos($url, '/') + 1);
+			$url = mb_substr($url, mb_strrpos($url, '/') + 1);
 
 			$product->setData('url', $url);
 			$product->setData('sku', $data->getData('sku'));
@@ -71,7 +71,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_
 					->setStoreId($this->storeId);
 
 				$url = $data->getProductUrl();
-				$url = substr($url, strrpos($url, '/') + 1);
+				$url = mb_substr($url, mb_strrpos($url, '/') + 1);
 
 				$entity->setData('url', $url);
 				$entity->setData('sku', $data->getData('sku'));

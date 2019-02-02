@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/01/03/2016
- * Updated M/27/02/2018
+ * Updated M/08/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -31,7 +31,7 @@ class Luigifab_Urlnosql_Model_Source_Attribute {
 		$options = array(array('label' => '', 'value' => ''));
 
 		foreach ($attributes as $attribute)
-			array_push($options, array('value' => $attribute->getData('attribute_code'), 'label' => $attribute->getData('attribute_code')));
+			$options[] = array('value' => $attribute->getData('attribute_code'), 'label' => $attribute->getData('attribute_code'));
 
 		return $options;
 	}

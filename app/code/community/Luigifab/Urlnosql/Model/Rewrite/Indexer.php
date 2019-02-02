@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/16/07/2018
+ * Updated M/15/01/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,11 +21,7 @@
 class Luigifab_Urlnosql_Model_Rewrite_Indexer extends Mage_Catalog_Model_Indexer_Url {
 
 	protected function _registerProductEvent(Mage_Index_Model_Event $event) {
-
-		if (Mage::getStoreConfigFlag('urlnosql/general/enabled'))
-			return $this;
-		else
-			return parent::_registerProductEvent($event);
+		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::_registerProductEvent($event);
 	}
 
 	protected function _processEvent(Mage_Index_Model_Event $event) {
