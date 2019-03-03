@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/30/06/2015
- * Updated M/15/01/2019
+ * Updated S/16/02/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -18,7 +18,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Model_Rewrite_AttrProdUrlkey extends Mage_Catalog_Model_Product_Attribute_Backend_Urlkey {
+class Luigifab_Urlnosql_Model_Rewrite_Urlkey extends Mage_Catalog_Model_Product_Attribute_Backend_Urlkey {
 
 	public function beforeSave($object) {
 		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::beforeSave($object);

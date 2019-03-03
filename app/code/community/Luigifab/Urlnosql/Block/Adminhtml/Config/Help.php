@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/26/07/2018
+ * Updated J/14/02/2019
  *
  * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -23,13 +23,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
 		if (($msg = $this->checkRewrites()) === true) {
-			return sprintf('<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>',
-				$this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql');
+			return sprintf('<p class="box">Luigifab/%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>',
+				'Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql');
 		}
 		else {
-			return sprintf('<p class="box">Luigifab/Urlnosql %s <a href="https://www.%s" style="float:right;">%2$s</a></p>'.
-				'<p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
-				$this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql',
+			return sprintf('<p class="box">Luigifab/%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
+				'Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 		}
