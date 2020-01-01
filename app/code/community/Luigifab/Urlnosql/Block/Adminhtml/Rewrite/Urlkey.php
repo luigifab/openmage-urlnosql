@@ -1,9 +1,9 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated L/16/07/2018
+ * Updated D/06/10/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -20,30 +20,19 @@
 
 class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Block_Catalog_Form_Renderer_Attribute_Urlkey {
 
-	//protected function _construct() {          // NO!
-	//	$this->setModuleName('Mage_Adminhtml'); // NO!
+	//protected function _construct() {
+	//	$this->setModuleName('Mage_Adminhtml');
 	//}
 
 	public function getElementHtml() {
 
-		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && is_object(Mage::registry('current_product'))) {
-
-			$html = str_replace(
-				array('disabled="disabled"', 'id=""', '<label', '<input'),
-				array('', '', '<label style="color:gray;" ', '<input disabled="disabled" '),
-				parent::getElementHtml()).' <p class="note" style="width:auto;">'.$this->__('Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).').'</p>';
-
-			$html = str_replace('{{', '<a href="'.$this->getUrl('*/*/edit', array('section' => 'urlnosql')).'">', $html);
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && !empty(Mage::registry('current_product'))) {
+			$html = $this->__('See {{Product URL rewrite}}.');
+			$html = str_replace('{{', '<a href="'.$this->getUrl('*/system_config/edit', ['section' => 'urlnosql']).'">', $html);
 			$html = str_replace('}}', '</a>', $html);
-
 			return $html;
 		}
-		else {
-			return parent::getElementHtml();
-		}
-	}
 
-	public function specialCheckRewrite() {
-		return true;
+		return parent::getElementHtml();
 	}
 }

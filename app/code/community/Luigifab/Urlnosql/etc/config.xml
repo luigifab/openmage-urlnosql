@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated S/16/02/2019
+ * Updated S/07/09/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Luigifab_Urlnosql>
-			<version>2.6.4</version>
+			<version>3.8.0</version>
 		</Luigifab_Urlnosql>
 	</modules>
 	<global>
@@ -47,16 +47,16 @@
 			<catalog>
 				<rewrite>
 					<url>Luigifab_Urlnosql_Model_Rewrite_Url</url>
-					<indexer_url>Luigifab_Urlnosql_Model_Rewrite_Indexer</indexer_url>
-					<product_url>Luigifab_Urlnosql_Model_Rewrite_Product</product_url>
+					<indexer_url>Luigifab_Urlnosql_Model_Rewrite_Indexerurl</indexer_url>
+					<product_url>Luigifab_Urlnosql_Model_Rewrite_Producturl</product_url>
 					<product_attribute_backend_urlkey>Luigifab_Urlnosql_Model_Rewrite_Urlkey</product_attribute_backend_urlkey>
 				</rewrite>
 			</catalog>
-			<sitemap_mysql4>
+			<sitemap_resource>
 				<rewrite>
 					<catalog_product>Luigifab_Urlnosql_Model_Rewrite_Sitemap</catalog_product>
 				</rewrite>
-			</sitemap_mysql4>
+			</sitemap_resource>
 		</models>
 		<events>
 			<controller_front_init_routers>
@@ -67,6 +67,14 @@
 					</urlnosql_match_producturl>
 				</observers>
 			</controller_front_init_routers>
+			<controller_front_init_before>
+				<observers>
+					<urlnosql_redirect_rewrite>
+						<class>urlnosql/observer</class>
+						<method>redirectToRewrite</method>
+					</urlnosql_redirect_rewrite>
+				</observers>
+			</controller_front_init_before>
 		</events>
 	</global>
 	<adminhtml>

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/14/02/2019
+ * Updated J/26/09/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -22,42 +22,34 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 
 	public function render(Varien_Data_Form_Element_Abstract $element) {
 
-		if (($msg = $this->checkRewrites()) === true) {
-			return sprintf('<p class="box">Luigifab/%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>',
-				'Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql');
-		}
-		else {
-			return sprintf('<p class="box">Luigifab/%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
-				'Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql',
+		$msg = $this->checkRewrites();
+		if ($msg !== true)
+			return sprintf('<p class="box">%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>'.
+				'<p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
+				'Luigifab/Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
-		}
+
+		return sprintf('<p class="box">%s %s <span style="float:right;"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>',
+			'Luigifab/Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/magento/urlnosql');
 	}
 
 	private function checkRewrites() {
 
-		$rewrites = array(
-			array('block', 'adminhtml/catalog_form_renderer_attribute_urlkey'),
-			array('model', 'catalog/indexer_url'),
-			array('model', 'catalog/product_attribute_backend_urlkey'),
-			array('model', 'catalog/product_url'),
-			array('model', 'catalog/url'),
-			array('model', 'sitemap_mysql4/catalog_product')
-		);
+		$rewrites = [
+			['block', 'adminhtml/catalog_form_renderer_attribute_urlkey'],
+			['model', 'catalog/indexer_url'],
+			['model', 'catalog/product_attribute_backend_urlkey'],
+			['model', 'catalog/product_url'],
+			['model', 'catalog/url'],
+			['model', 'sitemap_resource/catalog_product']
+		];
 
 		foreach ($rewrites as $rewrite) {
-			if ($rewrite[0] == 'model') {
-				if (!method_exists(Mage::getModel($rewrite[1]), 'specialCheckRewrite'))
-					return $rewrite[1];
-			}
-			else if ($rewrite[0] == 'resource') {
-				if (!method_exists(Mage::getResourceModel($rewrite[1]), 'specialCheckRewrite'))
-					return $rewrite[1];
-			}
-			else if ($rewrite[0] == 'block') {
-				if (!method_exists(Mage::getBlockSingleton($rewrite[1]), 'specialCheckRewrite'))
-					return $rewrite[1];
-			}
+			if (($rewrite[0] == 'model') && (mb_stripos(get_class(Mage::getModel($rewrite[1])), 'luigifab') === false))
+				return $rewrite[1];
+			else if (($rewrite[0] == 'block') && (mb_stripos(get_class(Mage::getBlockSingleton($rewrite[1])), 'luigifab') === false))
+				return $rewrite[1];
 		}
 
 		return true;

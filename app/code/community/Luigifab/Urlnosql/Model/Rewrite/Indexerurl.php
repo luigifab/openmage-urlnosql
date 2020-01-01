@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?php
+/**
  * Created V/26/06/2015
- * Updated V/23/02/2018
+ * Updated D/06/10/2019
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -16,33 +16,11 @@
  * but without any warranty, without even the implied warranty of
  * merchantability or fitness for a particular purpose. See the
  * GNU General Public License (GPL) for more details.
--->
+ */
 
-<config>
-	<acl>
-		<resources>
-			<admin>
-				<children>
-					<system>
-						<children>
-							<config>
-								<children>
-									<!--luigifab translate="title">
-										<title>Tools</title>
-										<sort_order>103</sort_order>
-										<children-->
-											<urlnosql translate="title">
-												<title>Product URL rewrite</title>
-												<sort_order>103090</sort_order>
-											</urlnosql>
-										<!--/children>
-									</luigifab-->
-								</children>
-							</config>
-						</children>
-					</system>
-				</children>
-			</admin>
-		</resources>
-	</acl>
-</config>
+class Luigifab_Urlnosql_Model_Rewrite_Indexerurl extends Mage_Catalog_Model_Indexer_Url {
+
+	protected function _registerProductEvent(Mage_Index_Model_Event $event) {
+		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::_registerProductEvent($event);
+	}
+}

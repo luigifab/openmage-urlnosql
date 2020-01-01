@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated V/23/02/2018
+ * Updated D/06/10/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -51,7 +51,7 @@
 					<fields>
 						<enabled translate="label comment">
 							<label>Enable</label>
-							<comment><![CDATA[Disables the "<strong>url_key</strong>" product attribute.<br />Disables products URLs reindexation.<br />Effective immediately.]]></comment>
+							<comment><![CDATA[Disables the <strong>url_key</strong> product attribute.<br />Disables products URLs reindexation.<br />Effective immediately.]]></comment>
 							<frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_yesno</source_model>
 							<sort_order>1</sort_order>
@@ -79,7 +79,7 @@
 						</ignore>
 						<oldids translate="label comment">
 							<label>Attribute used for old products ids</label>
-							<comment>Allows to redirect deleted products to the new ones. The attribute must be unique and global. On the product page, values separated by a trail.</comment>
+							<comment>Allows to redirect deleted products to the new ones. The attribute must be unique and global. On the product page, values separated by a comma or a space.</comment>
 							<frontend_type>select</frontend_type>
 							<source_model>urlnosql/source_attribute</source_model>
 							<sort_order>4</sort_order>
@@ -87,12 +87,22 @@
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
 						</oldids>
+						<redirect translate="label comment">
+							<label>Redirect non rewritten URLs</label>
+							<comment><![CDATA[For example <em>catalog/product/view/id</em> to <em>id-xyz.html</em>.]]></comment>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>5</sort_order>
+							<show_in_default>1</show_in_default>
+							<show_in_website>0</show_in_website>
+							<show_in_store>0</show_in_store>
+						</redirect>
 						<show_rewrite_tab translate="label comment">
 							<label>Automatically display the product URL rewrite tab</label>
 							<comment>When displaying the modification page of a product in the backend.</comment>
 							<frontend_type>select</frontend_type>
 							<source_model>adminhtml/system_config_source_yesno</source_model>
-							<sort_order>5</sort_order>
+							<sort_order>6</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
 							<show_in_store>0</show_in_store>
@@ -115,11 +125,11 @@
 					<fields>
 						<product_use_categories translate="comment">
 							<frontend_model>urlnosql/adminhtml_config_comment</frontend_model>
-							<comment><![CDATA[Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).]]></comment>
+							<comment><![CDATA[See {{Product URL rewrite}}.]]></comment>
 						</product_use_categories>
 						<save_rewrites_history translate="comment">
 							<frontend_model>urlnosql/adminhtml_config_comment</frontend_model>
-							<comment><![CDATA[Disabled when you are using <strong>urlnosql</strong> module (see {{Product URL rewrite}}).]]></comment>
+							<comment><![CDATA[See {{Product URL rewrite}}.]]></comment>
 						</save_rewrites_history>
 					</fields>
 				</seo>

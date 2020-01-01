@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated S/17/02/2018
+ * Updated M/20/08/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -26,8 +26,8 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 
 			$oldids  = Mage::getStoreConfig('urlnosql/general/oldids');
 			$product = Mage::getResourceModel('catalog/product_collection')
-				->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), array($oldids)))
-				->addAttributeToFilter('visibility', array('neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE))
+				->addAttributeToSelect(array_merge(Mage::getSingleton('catalog/config')->getProductAttributes(), [$oldids]))
+				->addAttributeToFilter('visibility', ['neq' => Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE])
 				->addAttributeToFilter('status', Mage_Catalog_Model_Product_Status::STATUS_ENABLED)
 				->addAttributeToSort('created_at', 'desc')
 				->setPageSize(1)

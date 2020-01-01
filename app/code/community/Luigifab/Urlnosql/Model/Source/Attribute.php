@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/01/03/2016
- * Updated M/08/01/2019
+ * Updated M/20/08/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -28,10 +28,10 @@ class Luigifab_Urlnosql_Model_Source_Attribute {
 		$attributes->addFieldToFilter('frontend_input', 'text');
 		$attributes->setOrder('attribute_code', 'asc');
 
-		$options = array(array('label' => '', 'value' => ''));
+		$options = [['label' => '', 'value' => '']];
 
 		foreach ($attributes as $attribute)
-			$options[] = array('value' => $attribute->getData('attribute_code'), 'label' => $attribute->getData('attribute_code'));
+			$options[] = ['value' => $attribute->getData('attribute_code'), 'label' => $attribute->getData('attribute_code')];
 
 		return $options;
 	}

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated S/22/12/2018
+ * Updated D/06/10/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -18,72 +18,31 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Mysql4_Catalog_Product {
-
-	private $storeId = 0;
+class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Resource_Catalog_Product {
 
 	public function getCollection($storeId) {
 		$this->storeId = $storeId;
 		return parent::getCollection($storeId);
 	}
 
-	// Magento 1.4 à 1.7
-	protected function _prepareProduct(array $productRow) {
-
-		$product = parent::_prepareProduct($productRow);
+	protected function _getEntityUrl($row, $entity) {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$data = Mage::getResourceModel('catalog/product_collection')
+			$product = Mage::getResourceModel('catalog/product_collection')
 				->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes'))))
-				->addAttributeToFilter('entity_id', $product->getId())
+				->addIdFilter($entity->getId())
+				->addStoreFilter($this->storeId)
 				->setPageSize(1)
 				->getFirstItem()
 				->setStoreId($this->storeId);
 
-			$url = $data->getProductUrl();
-			$url = mb_substr($url, mb_strrpos($url, '/') + 1);
+			$entity->setData('sku', $product->getData('sku'));
 
-			$product->setData('url', $url);
-			$product->setData('sku', $data->getData('sku'));
+			$url = $product->getProductUrl();
+			return mb_substr($url, mb_strripos($url, '/') + 1);
 		}
 
-		return $product;
-	}
-
-	// Magento 1.8 et +
-	protected function _loadEntities() {
-
-		$entities = array();
-		$query    = $this->_getWriteAdapter()->query($this->_select);
-
-		while ($row = $query->fetch()) {
-
-			$entity = $this->_prepareObject($row);
-
-			if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
-
-				$data = Mage::getResourceModel('catalog/product_collection')
-					->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes'))))
-					->addAttributeToFilter('entity_id', $entity->getId())
-					->setPageSize(1)
-					->getFirstItem()
-					->setStoreId($this->storeId);
-
-				$url = $data->getProductUrl();
-				$url = mb_substr($url, mb_strrpos($url, '/') + 1);
-
-				$entity->setData('url', $url);
-				$entity->setData('sku', $data->getData('sku'));
-			}
-
-			$entities[$entity->getId()] = $entity;
-		}
-
-		return $entities;
-	}
-
-	public function specialCheckRewrite() {
-		return true;
+		return parent::_getEntityUrl($row, $entity);
 	}
 }

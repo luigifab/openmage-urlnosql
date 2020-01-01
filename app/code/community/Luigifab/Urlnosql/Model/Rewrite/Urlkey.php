@@ -1,9 +1,9 @@
 <?php
 /**
  * Created M/30/06/2015
- * Updated S/16/02/2019
+ * Updated S/31/08/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -26,9 +26,5 @@ class Luigifab_Urlnosql_Model_Rewrite_Urlkey extends Mage_Catalog_Model_Product_
 
 	public function afterSave($object) {
 		return Mage::getStoreConfigFlag('urlnosql/general/enabled') ? $this : parent::afterSave($object);
-	}
-
-	public function specialCheckRewrite() {
-		return true;
 	}
 }

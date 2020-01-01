@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/15/01/2019
+ * Updated M/24/09/2019
  *
- * Copyright 2015-2019 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * https://www.luigifab.fr/magento/urlnosql
  *
@@ -18,52 +18,44 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Model_Rewrite_Product extends Mage_Catalog_Model_Product_Url {
+class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Product_Url {
 
-	public function getUrl(Mage_Catalog_Model_Product $product, $params = array()) {
+	public function getUrl(Mage_Catalog_Model_Product $product, $params = []) {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$storeId    = !empty($product->getStoreId()) ? $product->getStoreId() : Mage::app()->getStore()->getId();
+			$storeId    = empty($product->getStoreId()) ? Mage::app()->getStore()->getId() : $product->getStoreId();
 			$attributes = array_filter(preg_split('#\s+#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
 			$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
-
-			$data = array();
+			$data       = [];
 
 			foreach ($attributes as $attribute) {
 
 				$source = $product->getResource()->getAttribute($attribute);
-				$model  = Mage::getResourceModel('catalog/product');
 
-				// il faudrait peut être prendre en charge Mage::getStoreConfigFlag('catalog/frontend/flat_catalog_product')
 				// https://stackoverflow.com/a/30519730
-				if (is_object($source) && in_array($source->getData('frontend_input'), array('select', 'multiselect'))) {
-					$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
-					$value = $model->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
+				if (is_object($source) && in_array($source->getData('frontend_input'), ['select', 'multiselect'])) {
+					$value = $product->getResource()->getAttributeRawValue($product->getId(), $attribute, $storeId);
+					$value = $product->getResource()->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
 				}
 				else if (is_object($source)) {
-					$value = $model->getAttributeRawValue($product->getId(), $attribute, $storeId);
+					$value = $product->getResource()->getAttributeRawValue($product->getId(), $attribute, $storeId);
 				}
 				else {
 					$value = $product->getData($attribute);
 				}
 
-				$value = Mage::helper('urlnosql')->normalizeChars($value);
-
+				if (!empty($value))
+					$value = Mage::helper('urlnosql')->normalizeChars(Mage::getStoreConfig('general/locale/code', $storeId), $value);
 				if (!empty($value) && !in_array($value, $ignores))
 					$data[] = $value;
 			}
 
 			return Mage::app()->getStore($storeId)->getBaseUrl().
-				preg_replace('#\-{2,}#', '-', implode('-', $data)).             // est vide si le produit n'existe pas
+				preg_replace('#-{2,}#', '-', implode('-', $data)). // est vide si le produit n'existe pas
 				Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 		}
-		else {
-			return parent::getUrl($product, $params);
-		}
-	}
 
-	public function specialCheckRewrite() {
-		return true;
+		return parent::getUrl($product, $params);
 	}
 }
