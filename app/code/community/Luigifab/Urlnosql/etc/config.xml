@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated S/07/09/2019
+ * Updated M/07/01/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,7 +21,7 @@
 <config>
 	<modules>
 		<Luigifab_Urlnosql>
-			<version>3.8.0</version>
+			<version>3.8.1</version>
 		</Luigifab_Urlnosql>
 	</modules>
 	<global>

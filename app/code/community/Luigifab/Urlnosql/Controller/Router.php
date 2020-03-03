@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated D/06/10/2019
+ * Updated V/31/01/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -26,7 +26,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$observer->getData('front')->addRouter('urlnosql', $this);
 	}
 
-	public function match(Zend_Controller_Request_Http $request, $fromUs = false) {
+	public function match(Zend_Controller_Request_Http $request, bool $fromUs = false) {
 
 		// recherche
 		// au début $params est un array
@@ -34,21 +34,17 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		$params = explode('/', $params);
 
 		if (count($params) === 1) {
-
 			// Array ( [0] => 300003-abc.html )
 			$params = $params[0];
-
 			// recherche de l'id dans l'url (insensible à la casse)
 			// l'id étant l'id du produit dans Magento :)
 			preg_match('#^(\d+)[\w\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
-
 			if (!empty($id[1]) && is_numeric($id[1])) {
 				// Array ( [0] => 300003-abc.html [1] => 300003 )
 				$id = (int) $id[1];
 			}
 		}
 		else if ($fromUs === true) {
-
 			// Array ( [0] => catalog [1] => product [2] => view [3] => id [4] => 7 )
 			$id = array_search('id', $params);
 			$id = empty($params[$id + 1]) ? false : $params[$id + 1];
@@ -60,14 +56,12 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 		// vérifie les réécritures de Magento
 		if (empty($id)) {
-
 			$rewrite = Mage::getResourceModel('core/url_rewrite_collection')
 				->addFieldToFilter('store_id', Mage::app()->getStore()->getId())
 				->addFieldToFilter('request_path', mb_substr($request->getPathInfo(), 1))
 				->addFieldToFilter('product_id', ['gt' => 0])
 				->setPageSize(1)
 				->getFirstItem();
-
 			$id = $rewrite->getData('product_id');
 		}
 
@@ -89,7 +83,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				}
 				// produit non visible
 				// cherche les éventuels ids parents
-				else if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
+				if ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) {
 					$candidates = Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED;
 					$candidates = array_merge(
 						Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),

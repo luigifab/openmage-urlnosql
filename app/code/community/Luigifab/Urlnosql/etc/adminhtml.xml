@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated V/23/02/2018
+ * Updated D/09/02/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -27,16 +27,10 @@
 						<children>
 							<config>
 								<children>
-									<!--luigifab translate="title">
-										<title>Tools</title>
-										<sort_order>103</sort_order>
-										<children-->
-											<urlnosql translate="title">
-												<title>Product URL rewrite</title>
-												<sort_order>103090</sort_order>
-											</urlnosql>
-										<!--/children>
-									</luigifab-->
+									<urlnosql translate="title">
+										<title>Product URL rewrite</title>
+										<sort_order>103090</sort_order>
+									</urlnosql>
 								</children>
 							</config>
 						</children>
