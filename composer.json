@@ -1,0 +1,52 @@
+{
+    "type": "magento-module",
+    "name": "luigifab/openmage-urlnosql",
+    "description": "A module to manage products URLs by products attributes for OpenMage and Magento.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Fabrice Creuzot (luigifab)",
+            "email": "code@luigifab.fr"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0",
+        "openmage/magento-lts": ">=19.4.0",
+        "ext-mbstring": "*",
+        "ext-json": "*",
+        "ext-curl": "*"
+    },
+    "minimum-stability": "dev",
+    "extra": {
+        "map": [
+            ["src/app/locale/cs_CZ/Luigifab_Urlnosql.csv", "app/locale/cs_CZ/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/de_AT/Luigifab_Urlnosql.csv", "app/locale/de_AT/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/de_CH/Luigifab_Urlnosql.csv", "app/locale/de_CH/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/de_DE/Luigifab_Urlnosql.csv", "app/locale/de_DE/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_AR/Luigifab_Urlnosql.csv", "app/locale/es_AR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_CL/Luigifab_Urlnosql.csv", "app/locale/es_CL/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_CO/Luigifab_Urlnosql.csv", "app/locale/es_CO/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_CR/Luigifab_Urlnosql.csv", "app/locale/es_CR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_ES/Luigifab_Urlnosql.csv", "app/locale/es_ES/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_MX/Luigifab_Urlnosql.csv", "app/locale/es_MX/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_PA/Luigifab_Urlnosql.csv", "app/locale/es_PA/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_PE/Luigifab_Urlnosql.csv", "app/locale/es_PE/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/es_VE/Luigifab_Urlnosql.csv", "app/locale/es_VE/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/fr_CA/Luigifab_Urlnosql.csv", "app/locale/fr_CA/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/fr_FR/Luigifab_Urlnosql.csv", "app/locale/fr_FR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/it_CH/Luigifab_Urlnosql.csv", "app/locale/it_CH/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/it_IT/Luigifab_Urlnosql.csv", "app/locale/it_IT/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/ja_JP/Luigifab_Urlnosql.csv", "app/locale/ja_JP/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/nl_NL/Luigifab_Urlnosql.csv", "app/locale/nl_NL/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/pl_PL/Luigifab_Urlnosql.csv", "app/locale/pl_PL/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/pt_BR/Luigifab_Urlnosql.csv", "app/locale/pt_BR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/pt_PT/Luigifab_Urlnosql.csv", "app/locale/pt_PT/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/ru_RU/Luigifab_Urlnosql.csv", "app/locale/ru_RU/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/tr_TR/Luigifab_Urlnosql.csv", "app/locale/tr_TR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/zh_CN/Luigifab_Urlnosql.csv", "app/locale/zh_CN/Luigifab_Urlnosql.csv"],
+            ["src/app/etc/modules/Luigifab_Urlnosql.xml", "app/etc/modules/Luigifab_Urlnosql.xml"],
+            ["src/app/code/community/Luigifab/Urlnosql/", "app/code/community/Luigifab/Urlnosql/"],
+            ["src/app/design/adminhtml/default/default/layout/luigifab/urlnosql.xml", "app/design/adminhtml/default/default/layout/luigifab/urlnosql.xml"]
+        ]
+    }
+}
