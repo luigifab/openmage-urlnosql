@@ -1,8 +1,8 @@
 Docs      : https://www.luigifab.fr/openmage/urlnosql
-Mirror    : https://github.com/luigifab/openmage-urlnosql
+Tracker   : https://github.com/luigifab/openmage-urlnosql
 Composer  : https://packagist.org/packages/luigifab/openmage-urlnosql
 Module    : Luigifab/Urlnosql
-License   : GNU GPL 2 (https://opensource.org/licenses/gpl-2.0)
+License   : GNU GPL 2+ (https://opensource.org/licenses/gpl-2.0)
 Copyright : 2015-2020 Fabrice Creuzot (luigifab) <code~luigifab~fr>
 Copyright : 2015-2016 Fabrice Creuzot <fabrice.creuzot~label-park~com>
 
@@ -12,11 +12,9 @@ Copyright : 2015-2016 Fabrice Creuzot <fabrice.creuzot~label-park~com>
 THE COMPOSER KEY FOR COMMAND LINE IS: luigifab/openmage-urlnosql
 THE EXTENSION KEY FOR MAGENTO CONNECT MANAGER IS: https://www.luigifab.fr/magento/connect/luigifab/Luigifab_Urlnosql
 
-THE MODULE AND ALL THE TRANSLATIONS AND ALL THE DOCUMENTATION ARE EXCEPTIONALLY MAGNIFICENT.
 IF YOU FOUND A MISTAKE OR A BUG, PLEASE, CONTACT ME (IN FRENCH OR IN ENGLISH) AT code~luigifab~fr
-
 CSS AND JS FILES ARE MINIFIED WITH clean-css (github.com/jakubpawlowicz/clean-css) AND uglify-js (github.com/mishoo/UglifyJS2).
-ALL FILES (INCLUDING DOCUMENTATION AND TRANSLATIONS) ARE LICENSED UNDER THE TERMS OF GNU GPL 2.0+ LICENSE.
+ALL FILES (INCLUDING DOCUMENTATION AND TRANSLATIONS) ARE LICENSED UNDER THE TERMS OF THE GNU GPL 2+ LICENSE.
 
 
 
@@ -59,6 +57,7 @@ Files and directories
 - app/locale/pt_BR/Luigifab_Urlnosql.csv
 - app/locale/pt_PT/Luigifab_Urlnosql.csv
 - app/locale/ru_RU/Luigifab_Urlnosql.csv
+- app/locale/sk_SK/Luigifab_Urlnosql.csv
 - app/locale/tr_TR/Luigifab_Urlnosql.csv
 - app/locale/zh_CN/Luigifab_Urlnosql.csv
 - app/etc/modules/Luigifab_Urlnosql.xml
@@ -74,7 +73,7 @@ Translations in en-US (english/United-States) by:
 - Alexandre Laffitte <alexandre.laffitte~label-park~com> 2016
 - Pascale Scellier <scellier.pascale~orange~fr> 2017
 Translations in es-ES (español/España) by:
-- Hélène Vergine <vergineh~gmail~com> 2017
+- Hélène Vergine <vergineh~gmail~com> 2017, 2020
 - Guillaume Genetet <genetet.incorporated~gmail~com> 2018 https://fr.tipeee.com/william-broome
 Translations in fr-FR (français/France) by:
 - Fabrice Creuzot (luigifab) <code~luigifab~fr> 2015-2020
