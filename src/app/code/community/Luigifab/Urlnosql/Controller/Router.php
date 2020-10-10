@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/12/06/2020
+ * Updated V/09/10/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -38,7 +38,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			$params = $params[0];
 			// recherche de l'id dans l'url (insensible à la casse)
 			// l'id étant l'id du produit
-			preg_match('#^(\d+)[\w\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
+			preg_match('#^(\d+)[\w%\-]*'.Mage::helper('catalog/product')->getProductUrlSuffix().'$#i', $params, $id);
 			if (!empty($id[1]) && is_numeric($id[1])) {
 				// Array ( [0] => 300003-abc.html [1] => 300003 )
 				$id = (int) $id[1];
@@ -69,9 +69,10 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		// dorénavant $params est un string
 		if (!empty($id) && is_numeric($id)) {
 
+			$storeId = Mage::app()->getStore()->getId();
 			$candidates = [];
 
-			$product = Mage::getModel('catalog/product')->load($id);
+			$product = Mage::getModel('catalog/product')->setStoreId($storeId)->load($id);
 			$product = empty($product->getId()) ? null : $product;
 
 			// LE PRODUIT EXISTE
@@ -113,7 +114,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			while (!empty($candidates)) {
 
 				$product = array_shift($candidates); // un id ou un objet produit (du premier au dernier)
-				$product = is_object($product) ? $product : Mage::getModel('catalog/product')->load($product);
+				$product = is_object($product) ? $product : Mage::getModel('catalog/product')->setStoreId($storeId)->load($product);
 
 				// le produit existe (le contraire est possible via l'attribut oldids)
 				// le produit est activé (le contraire est possible via l'attribut oldids ou via les produits associés)

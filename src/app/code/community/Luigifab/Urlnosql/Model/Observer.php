@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated M/24/09/2019
+ * Updated M/29/09/2019
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -20,7 +20,7 @@
 
 class Luigifab_Urlnosql_Model_Observer {
 
-	// EVENT controller_front_init_before
+	// EVENT controller_front_init_before (global)
 	public function redirectToRewrite(Varien_Event_Observer $observer) {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && Mage::getStoreConfigFlag('urlnosql/general/redirect')) {

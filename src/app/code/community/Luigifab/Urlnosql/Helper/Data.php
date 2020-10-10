@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/23/01/2020
+ * Updated V/09/10/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -31,7 +31,6 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function escapeEntities($data, bool $quotes = false) {
 		return htmlspecialchars($data, $quotes ? ENT_SUBSTITUTE | ENT_COMPAT : ENT_SUBSTITUTE | ENT_NOQUOTES);
 	}
-
 
 	public function normalizeChars(string $locale, string $data) {
 
@@ -124,6 +123,6 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		$data = mb_strtolower((preg_match('/[\x80-\xff]/', $data) === 1) ? strtr($data, $chars) : $data);
-		return trim(preg_replace('#[^\w\-]#', '', $data), '-');
+		return trim(preg_replace('#[^\w\-]#', '', str_replace(' ', '-', $data)), '-');
 	}
 }

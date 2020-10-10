@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated D/31/05/2020
+ * Updated V/09/10/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -41,9 +41,9 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		if (!is_object($product))
 			$product = clone Mage::registry('current_product');
 
+		$storeId    = (int) $this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId());
 		$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 		$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
-		$storeId    = (int) $this->getRequest()->getParam('store', Mage::app()->getDefaultStoreView()->getId());
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
 		$html       = [];
 
@@ -63,7 +63,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>',
 				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix());
 			$html[] = '<br />'.$this->__('This product replaces the following deleted products (via the <em>%s</em> attribute): %s.',
-				$oldids, str_replace([',', ' ', ',,'], ', ', $product->getData($oldids))).'</p>';
+				$oldids, str_replace([' ', ',', ', ,', ',  ,', ',,'], ', ', $product->getData($oldids))).'</p>';
 		}
 		else {
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>',
@@ -128,22 +128,22 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 			$locale = Mage::getStoreConfig('general/locale/code', $store->getId());
 			$url    = $product->setStoreId($store->getId())->getProductUrl();
-			$mark   = (($number > 1) && ($storeId == $store->getId()));
+			$marker = ($number > 1) && ($storeId == $store->getId());
 
 			if ($locale != $code) {
 				$html[] = '<li>'.
-					($mark ? '<strong>' : '').
+					($marker ? '<strong>' : '').
 						$this->__('(%d) <span lang="%s">%s</span>:', $store->getId(), mb_substr($locale, 0, 2), $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
-					($mark ? '</strong>' : '').
+					($marker ? '</strong>' : '').
 				'</li>';
 			}
 			else {
 				$html[] = '<li>'.
-					($mark ? '<strong>' : '').
+					($marker ? '<strong>' : '').
 						$this->__('(%d) %s:', $store->getId(), $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
-					($mark ? '</strong>' : '').
+					($marker ? '</strong>' : '').
 				'</li>';
 			}
 		}
