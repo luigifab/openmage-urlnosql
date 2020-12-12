@@ -1,5 +1,5 @@
 <_>
-   <form_key>nmYRFP6MC48cN1Pj</form_key>
+   <form_key>ZbxDU3ys177mCFXy</form_key>
    <name>Luigifab_Urlnosql</name>
    <channel>luigifab</channel>
    <version_ids>
@@ -9,7 +9,7 @@
    <description>https://www.luigifab.fr/openmage/urlnosql</description>
    <license>GPL</license>
    <license_uri>https://opensource.org/licenses/gpl-2.0</license_uri>
-   <version>4.0.2</version>
+   <version>4.1.0</version>
    <stability>stable</stability>
    <notes>Only for OpenMage/Magento 1.9+ with PHP 7.2+/8.0+</notes>
    <authors>

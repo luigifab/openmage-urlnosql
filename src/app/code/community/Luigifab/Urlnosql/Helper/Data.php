@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/09/10/2020
+ * Updated J/19/11/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -123,6 +123,6 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 		}
 
 		$data = mb_strtolower((preg_match('/[\x80-\xff]/', $data) === 1) ? strtr($data, $chars) : $data);
-		return trim(preg_replace('#[^\w\-]#', '', str_replace(' ', '-', $data)), '-');
+		return trim(preg_replace('#[^\w\-]#', '', str_replace(['/', ' '], '-', $data)), '-');
 	}
 }

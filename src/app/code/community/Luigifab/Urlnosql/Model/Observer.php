@@ -1,10 +1,11 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated M/29/09/2019
+ * Updated S/28/11/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * Copyright 2020      | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -23,29 +24,92 @@ class Luigifab_Urlnosql_Model_Observer {
 	// EVENT controller_front_init_before (global)
 	public function redirectToRewrite(Varien_Event_Observer $observer) {
 
-		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && Mage::getStoreConfigFlag('urlnosql/general/redirect')) {
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$request = $observer->getData('front')->getRequest();
-			if (empty($request->getPost()) && !Mage::app()->getStore()->isAdmin()) {
+			$suffix  = Mage::helper('catalog/product')->getProductUrlSuffix();
+			$path    = trim($request->getPathInfo(), '/');
 
-				$path = trim($request->getPathInfo(), '/').'/';
-				if (mb_stripos($path, 'catalog/product/view') !== false) {
-					$router = new Luigifab_Urlnosql_Controller_Router();
-					$router->match($request, true);
-				}
-				else {
-					$rewrite = Mage::getResourceModel('core/url_rewrite_collection')
+			if (empty($_POST) && (mb_stripos($path, $suffix) !== false) && (preg_match('#^(\d+)[\w%\-]*'.$suffix.'$#i', $path) !== 1)) {
+
+				// si ancienne url dans request_path ou target_path
+				// cherche l'id produit, en plusieurs fois si nécessaire
+				$debug = ['OBSERVER', 'Searching '.$path.' in core_url_rewrite'];
+				$where = ['request_path', 'target_path', 'request_path', 'target_path'];
+				$paths = [['like' => $path], ['like' => $path], ['like' => '/'.$path], ['like' => '/'.$path]];
+				$skips = [];
+				$idx   = 0;
+
+				while (!empty($where) && ($idx < 10)) {
+
+					$debug[]  = '-- loading from database --';
+					$rewrites = Mage::getResourceModel('core/url_rewrite_collection')
 						->addFieldToFilter('store_id', Mage::app()->getStore()->getId())
-						->addFieldToFilter('target_path', $path)
-						->setPageSize(1)
-						->getFirstItem();
+						->addFieldToFilter($where, $paths);
 
-					if (!empty($rewrite->getData('request_path'))) {
-						header('Location: '.Mage::getBaseUrl().$rewrite->getData('request_path'), true, 301);
-						exit(0); // stop redirection 301
+					if (!empty($skips))
+						$rewrites->addFieldToFilter('url_rewrite_id', ['nin' => $skips]);
+
+					$where = [];
+					$paths = [];
+
+					foreach ($rewrites as $rewrite) {
+
+						$id = $rewrite->getData('id_path');
+						$debug[] = 'Checking "'.$id.'" ('.trim($rewrite->getData('request_path'), '/').' - '.trim($rewrite->getData('target_path'), '/').')';
+
+						if (mb_stripos($id, 'product/') === 0) {
+							$id = (array) explode('/', $id); // (yes)
+							$debug[] = 'Product #'.$id[1].' found!';
+							$router = new Luigifab_Urlnosql_Controller_Router();
+							$router->match($request->setPathInfo('catalog/product/view/id/'.$id[1]), true, $debug);
+							return; // inutile de continuer
+						}
+						if (mb_stripos($id, 'category/') === 0) {
+							$debug[] = 'Category found!';
+							Luigifab_Urlnosql_Controller_Router::saveDebug($debug);
+							return; // inutile de continuer
+						}
+
+						// si c'est une boucle de redirection
+						$skips[] = $rewrite->getId();
+
+						$where[] = 'request_path';
+						$where[] = 'target_path';
+						$where[] = 'request_path';
+						$where[] = 'target_path';
+
+						$paths[] = ['like' => ($path = trim($rewrite->getData('request_path'), '/'))];
+						$paths[] = ['like' => $path];
+						$paths[] = ['like' => '/'.$path];
+						$paths[] = ['like' => '/'.$path];
+
+						$where[] = 'request_path';
+						$where[] = 'target_path';
+						$where[] = 'request_path';
+						$where[] = 'target_path';
+
+						$paths[] = ['like' => ($path = trim($rewrite->getData('target_path'), '/'))];
+						$paths[] = ['like' => $path];
+						$paths[] = ['like' => '/'.$path];
+						$paths[] = ['like' => '/'.$path];
 					}
+
+					$idx++;
 				}
+
+				$debug[] = 'No products found!';
+				Luigifab_Urlnosql_Controller_Router::saveDebug($debug);
 			}
+		}
+	}
+
+	// EVENT controller_action_predispatch_catalog_product_view (frontend)
+	public function checkProductUrl(Varien_Event_Observer $observer) {
+
+		if (empty(Mage::registry('urlnosql')) && Mage::getStoreConfigFlag('urlnosql/general/redirect')) {
+			$router = new Luigifab_Urlnosql_Controller_Router();
+			$router->match($observer->getData('controller_action')->getRequest(), true);
 		}
 	}
 

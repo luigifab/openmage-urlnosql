@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated D/31/05/2020
+ * Updated J/19/11/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -25,9 +25,9 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
 			$storeId    = empty($product->getStoreId()) ? Mage::app()->getStore()->getId() : $product->getStoreId();
-			$attributes = array_filter(preg_split('#\s+#', trim('entity_id '.Mage::getStoreConfig('urlnosql/general/attributes'))));
+			$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 			$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
-			$data       = [];
+			$values     = [];
 
 			foreach ($attributes as $attribute) {
 
@@ -46,11 +46,11 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 				if (!empty($value))
 					$value = Mage::helper('urlnosql')->normalizeChars(Mage::getStoreConfig('general/locale/code', $storeId), $value);
 				if (!empty($value) && !in_array($value, $ignores))
-					$data[] = $value;
+					$values[] = $value;
 			}
 
 			return Mage::app()->getStore($storeId)->getBaseUrl().
-				preg_replace('#-{2,}#', '-', implode('-', $data)). // est vide si le produit n'existe pas
+				preg_replace('#-{2,}#', '-', implode('-', $values)). // est vide si le produit n'existe pas
 				Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 		}
 

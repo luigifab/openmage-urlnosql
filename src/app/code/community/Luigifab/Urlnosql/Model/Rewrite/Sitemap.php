@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated D/06/10/2019
+ * Updated J/19/11/2020
  *
  * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,7 +21,7 @@
 class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Resource_Catalog_Product {
 
 	public function getCollection($storeId) {
-		$this->storeId = $storeId;
+		$this->_storeId = $storeId;
 		return parent::getCollection($storeId);
 	}
 
@@ -32,10 +32,10 @@ class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Resourc
 			$product = Mage::getResourceModel('catalog/product_collection')
 				->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes'))))
 				->addIdFilter($entity->getId())
-				->addStoreFilter($this->storeId)
+				->addStoreFilter($this->_storeId)
 				->setPageSize(1)
 				->getFirstItem()
-				->setStoreId($this->storeId);
+				->setStoreId($this->_storeId);
 
 			$entity->setData('sku', $product->getData('sku'));
 
