@@ -1,10 +1,11 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated J/19/11/2020
+ * Updated V/12/02/2021
  *
- * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -94,7 +95,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			}
 
 			if (!empty($value))
-				$value = $this->helper('urlnosql')->normalizeChars(Mage::getStoreConfig('general/locale/code', $storeId), $value);
+				$value = $this->helper('urlnosql')->normalizeChars(Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId), $value);
 
 			if (($attribute != 'entity_id') && !is_object($source)) {
 				$html[] = '<li>'.$this->__('%s <span %s>Warning! This attribute does not exist.</span>', $attribute, $css).'</li>';
@@ -127,7 +128,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 		foreach ($stores as $store) {
 
-			$locale = Mage::getStoreConfig('general/locale/code', $store->getId());
+			$locale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $store->getId());
 			$url    = $product->setStoreId($store->getId())->getProductUrl();
 			$marker = ($number > 1) && ($storeId == $store->getId());
 

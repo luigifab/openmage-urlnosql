@@ -1,7 +1,7 @@
 {
     "type": "magento-module",
     "name": "luigifab/openmage-urlnosql",
-    "description": "A module to manage products URLs by products attributes for OpenMage and Magento.",
+    "description": "A module to manage products URLs by products attributes for OpenMage.",
     "homepage": "https://github.com/luigifab/openmage-urlnosql",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -53,6 +53,7 @@
             ["src/app/locale/es_PE/Luigifab_Urlnosql.csv", "app/locale/es_PE/Luigifab_Urlnosql.csv"],
             ["src/app/locale/es_VE/Luigifab_Urlnosql.csv", "app/locale/es_VE/Luigifab_Urlnosql.csv"],
             ["src/app/locale/fr_CA/Luigifab_Urlnosql.csv", "app/locale/fr_CA/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/fr_CH/Luigifab_Urlnosql.csv", "app/locale/fr_CH/Luigifab_Urlnosql.csv"],
             ["src/app/locale/fr_FR/Luigifab_Urlnosql.csv", "app/locale/fr_FR/Luigifab_Urlnosql.csv"],
             ["src/app/locale/it_CH/Luigifab_Urlnosql.csv", "app/locale/it_CH/Luigifab_Urlnosql.csv"],
             ["src/app/locale/it_IT/Luigifab_Urlnosql.csv", "app/locale/it_IT/Luigifab_Urlnosql.csv"],
@@ -64,6 +65,7 @@
             ["src/app/locale/ru_RU/Luigifab_Urlnosql.csv", "app/locale/ru_RU/Luigifab_Urlnosql.csv"],
             ["src/app/locale/sk_SK/Luigifab_Urlnosql.csv", "app/locale/sk_SK/Luigifab_Urlnosql.csv"],
             ["src/app/locale/tr_TR/Luigifab_Urlnosql.csv", "app/locale/tr_TR/Luigifab_Urlnosql.csv"],
+            ["src/app/locale/uk_UA/Luigifab_Urlnosql.csv", "app/locale/uk_UA/Luigifab_Urlnosql.csv"],
             ["src/app/locale/zh_CN/Luigifab_Urlnosql.csv", "app/locale/zh_CN/Luigifab_Urlnosql.csv"],
             ["src/app/etc/modules/Luigifab_Urlnosql.xml", "app/etc/modules/Luigifab_Urlnosql.xml"],
             ["src/app/code/community/Luigifab/Urlnosql/", "app/code/community/Luigifab/Urlnosql/"],

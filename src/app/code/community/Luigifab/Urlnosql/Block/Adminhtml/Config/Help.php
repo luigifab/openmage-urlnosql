@@ -1,10 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated D/31/05/2020
+ * Updated V/12/02/2021
  *
- * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -39,6 +40,8 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 		$rewrites = [
 			['block' => 'adminhtml/catalog_form_renderer_attribute_urlkey'],
 			['model' => 'catalog/indexer_url'],
+			['model' => 'catalog/product_api'],
+			['model' => 'catalog/product_api_v2'],
 			['model' => 'catalog/product_attribute_backend_urlkey'],
 			['model' => 'catalog/product_url'],
 			['model' => 'catalog/url'],

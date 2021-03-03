@@ -1,11 +1,11 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated S/28/11/2020
+ * Updated D/24/01/2021
  *
- * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020      | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -58,14 +58,14 @@ class Luigifab_Urlnosql_Model_Observer {
 						$id = $rewrite->getData('id_path');
 						$debug[] = 'Checking "'.$id.'" ('.trim($rewrite->getData('request_path'), '/').' - '.trim($rewrite->getData('target_path'), '/').')';
 
-						if (mb_stripos($id, 'product/') === 0) {
+						if (strncasecmp($id, 'product/', 8) === 0) {
 							$id = (array) explode('/', $id); // (yes)
 							$debug[] = 'Product #'.$id[1].' found!';
 							$router = new Luigifab_Urlnosql_Controller_Router();
 							$router->match($request->setPathInfo('catalog/product/view/id/'.$id[1]), true, $debug);
 							return; // inutile de continuer
 						}
-						if (mb_stripos($id, 'category/') === 0) {
+						if (strncasecmp($id, 'category/', 9) === 0) {
 							$debug[] = 'Category found!';
 							Luigifab_Urlnosql_Controller_Router::saveDebug($debug);
 							return; // inutile de continuer

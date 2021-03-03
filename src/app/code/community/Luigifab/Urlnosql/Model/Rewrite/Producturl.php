@@ -1,10 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/19/11/2020
+ * Updated D/24/01/2021
  *
- * Copyright 2015-2020 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
+ * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -44,7 +45,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 				}
 
 				if (!empty($value))
-					$value = Mage::helper('urlnosql')->normalizeChars(Mage::getStoreConfig('general/locale/code', $storeId), $value);
+					$value = Mage::helper('urlnosql')->normalizeChars(Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId), $value);
 				if (!empty($value) && !in_array($value, $ignores))
 					$values[] = $value;
 			}
