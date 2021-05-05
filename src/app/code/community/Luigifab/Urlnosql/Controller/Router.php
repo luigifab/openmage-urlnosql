@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/29/01/2021
+ * Updated M/20/04/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -66,7 +66,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		else if ($fromUs === true) {
 			// Array ( [0] => catalog [1] => product [2] => view [3] => id [4] => 7 )
 			$id = array_search('id', $params);
-			$id = empty($params[$id + 1]) ? false : $params[$id + 1];
+			$id = array_key_exists($id + 1, $params) ? $params[$id + 1] : false;
 			$params = '///';
 		}
 

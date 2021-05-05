@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated D/24/01/2021
+ * Updated L/19/04/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,11 +21,34 @@
 
 class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Product_Url {
 
+	private static $_cacheUrls = [];
+
+	public function __construct() {
+
+		if (empty(self::$_cacheUrls) && Mage::app()->useCache('eav')) {
+			self::$_cacheUrls = @json_decode(Mage::app()->loadCache('urlnosql_urls'), true);
+			register_shutdown_function([$this, 'destruct']);
+			if (!is_array(self::$_cacheUrls))
+				self::$_cacheUrls = [];
+		}
+	}
+
+	public function destruct() {
+
+		if (!empty(self::$_cacheUrls) && Mage::app()->useCache('eav'))
+			Mage::app()->saveCache(json_encode(self::$_cacheUrls), 'urlnosql_urls', ['eav']);
+	}
+
 	public function getUrl(Mage_Catalog_Model_Product $product, $params = []) {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
 
-			$storeId    = empty($product->getStoreId()) ? Mage::app()->getStore()->getId() : $product->getStoreId();
+			$storeId   = empty($product->getStoreId()) ? Mage::app()->getStore()->getId() : $product->getStoreId();
+			$productId = $product->getId();
+
+			if (!empty(self::$_cacheUrls[$storeId][$productId]))
+				return self::$_cacheUrls[$storeId][$productId];
+
 			$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 			$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
 			$values     = [];
@@ -36,7 +59,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 
 				// https://stackoverflow.com/a/30519730
 				if (is_object($source)) {
-					$value = $product->getResource()->getAttributeRawValue($product->getId(), $attribute, $storeId);
+					$value = $product->getResource()->getAttributeRawValue($productId, $attribute, $storeId);
 					if (in_array($source->getData('frontend_input'), ['select', 'multiselect']))
 						$value = $product->getResource()->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
 				}
@@ -50,9 +73,11 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 					$values[] = $value;
 			}
 
-			return Mage::app()->getStore($storeId)->getBaseUrl().
+			self::$_cacheUrls[$storeId][$productId] = Mage::app()->getStore($storeId)->getBaseUrl().
 				preg_replace('#-{2,}#', '-', implode('-', $values)). // est vide si le produit n'existe pas
 				Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
+
+			return self::$_cacheUrls[$storeId][$productId];
 		}
 
 		return parent::getUrl($product, $params);

@@ -1,7 +1,7 @@
 <?php
 /**
  * Created S/22/08/2015
- * Updated L/18/05/2020
+ * Updated S/01/05/2020
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -30,9 +30,8 @@ class Luigifab_Urlnosql_Block_Adminhtml_Rewrite_Urlkey extends Mage_Adminhtml_Bl
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && !empty(Mage::registry('current_product'))) {
 			$html = $this->__('See {{Product URL rewrite}}.');
 			$html = str_replace(['{{', '}}'], ['<a href="'.$this->getUrl('*/system_config/edit', ['section' => 'urlnosql']).'">', '</a>'], $html);
-			return $html;
 		}
 
-		return parent::getElementHtml();
+		return $html ?? parent::getElementHtml();
 	}
 }
