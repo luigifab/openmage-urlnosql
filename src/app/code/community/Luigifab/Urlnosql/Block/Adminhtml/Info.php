@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated M/16/03/2021
+ * Updated L/24/05/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -42,8 +42,9 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		if (!is_object($product))
 			$product = clone Mage::registry('current_product');
 
-		$storeId    = (int) $this->getRequest()->getParam('store', 0);
-		$storeId    = empty($storeId) ? Mage::app()->getDefaultStoreView()->getId() : $storeId;
+		$storeId = $this->getRequest()->getParam('store');
+		$storeId = empty($storeId) ? Mage::app()->getDefaultStoreView()->getId() : Mage::app()->getStore($storeId)->getId();
+
 		$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 		$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');

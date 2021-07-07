@@ -2,6 +2,7 @@
     "type": "magento-module",
     "name": "luigifab/openmage-urlnosql",
     "description": "A module to manage products URLs by products attributes for OpenMage.",
+    "keywords": ["openmage", "openmage-module"],
     "homepage": "https://github.com/luigifab/openmage-urlnosql",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -34,7 +35,8 @@
         "openmage/magento-lts": ">=19.4.0",
         "ext-mbstring": "*",
         "ext-json": "*",
-        "ext-curl": "*"
+        "ext-curl": "*",
+        "ext-intl": "*"
     },
     "minimum-stability": "dev",
     "extra": {
