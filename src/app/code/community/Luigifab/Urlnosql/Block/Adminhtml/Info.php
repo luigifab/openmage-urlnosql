@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated L/24/05/2021
+ * Updated S/03/07/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -56,7 +56,8 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			$html[] = '<fieldset><legend>'.$this->getTabLabel().'</legend>';
 		}
 		else {
-			$html[] = '<div class="entry-edit-head"><strong>'.$title.'</strong></div>';
+			$html[] = '<div class="section-config">';
+			$html[] = '<div class="entry-edit-head collapseable"><strong>'.$title.'</strong></div>';
 			$html[] = '<fieldset class="config"><legend>'.$title.'</legend>';
 		}
 
@@ -153,9 +154,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 		$html[] = '</ul>';
 		$html[] = '</fieldset>';
-
-		if ($title === true)
-			$html[] = '</div>';
+		$html[] = '</div>';
 
 		return implode("\n", $html);
 	}

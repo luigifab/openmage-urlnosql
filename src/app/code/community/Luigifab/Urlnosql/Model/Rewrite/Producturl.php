@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/19/04/2021
+ * Updated J/29/07/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -25,7 +25,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 
 	public function __construct() {
 
-		if (empty(self::$_cacheUrls) && Mage::app()->useCache('eav')) {
+		if (empty(self::$_cacheUrls) && Mage::app()->useCache('block_html')) {
 			self::$_cacheUrls = @json_decode(Mage::app()->loadCache('urlnosql_urls'), true);
 			register_shutdown_function([$this, 'destruct']);
 			if (!is_array(self::$_cacheUrls))
@@ -35,8 +35,8 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 
 	public function destruct() {
 
-		if (!empty(self::$_cacheUrls) && Mage::app()->useCache('eav'))
-			Mage::app()->saveCache(json_encode(self::$_cacheUrls), 'urlnosql_urls', ['eav']);
+		if (!empty(self::$_cacheUrls) && Mage::app()->useCache('block_html'))
+			Mage::app()->saveCache(json_encode(self::$_cacheUrls), 'urlnosql_urls', [Mage_Core_Model_Config::CACHE_TAG, Mage_Core_Block_Abstract::CACHE_GROUP]);
 	}
 
 	public function getUrl(Mage_Catalog_Model_Product $product, $params = []) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated V/20/11/2020
+ * Updated S/03/07/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -48,7 +48,6 @@
 					<show_in_default>1</show_in_default>
 					<show_in_website>0</show_in_website>
 					<show_in_store>0</show_in_store>
-					<expanded>1</expanded>
 					<fields>
 						<enabled translate="label comment">
 							<label>Enable</label>

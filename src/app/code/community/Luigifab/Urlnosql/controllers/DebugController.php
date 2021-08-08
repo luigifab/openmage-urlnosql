@@ -1,7 +1,7 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated M/02/02/2021
+ * Updated S/31/07/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -22,6 +22,8 @@
 class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Action {
 
 	public function indexAction() {
+
+		Mage::register('turpentine_nocache_flag', true, true);
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && Mage::getStoreConfigFlag('urlnosql/general/debug_enabled')) {
 
@@ -55,6 +57,8 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 
 	public function startAction() {
 
+		Mage::register('turpentine_nocache_flag', true, true);
+
 		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
 		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
 			Mage::getSingleton('core/cookie')->set('urlnosql', 1);
@@ -66,6 +70,8 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 	}
 
 	public function stopAction() {
+
+		Mage::register('turpentine_nocache_flag', true, true);
 
 		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
 		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {

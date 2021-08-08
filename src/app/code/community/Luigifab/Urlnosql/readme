@@ -38,6 +38,7 @@ Files and directories
 - app/locale/de_AT/Luigifab_Urlnosql.csv
 - app/locale/de_CH/Luigifab_Urlnosql.csv
 - app/locale/de_DE/Luigifab_Urlnosql.csv
+- app/locale/el_GR/Luigifab_Urlnosql.csv
 - app/locale/es_AR/Luigifab_Urlnosql.csv
 - app/locale/es_CL/Luigifab_Urlnosql.csv
 - app/locale/es_CO/Luigifab_Urlnosql.csv
@@ -50,6 +51,7 @@ Files and directories
 - app/locale/fr_CA/Luigifab_Urlnosql.csv
 - app/locale/fr_CH/Luigifab_Urlnosql.csv
 - app/locale/fr_FR/Luigifab_Urlnosql.csv
+- app/locale/hu_HU/Luigifab_Urlnosql.csv
 - app/locale/it_CH/Luigifab_Urlnosql.csv
 - app/locale/it_IT/Luigifab_Urlnosql.csv
 - app/locale/ja_JP/Luigifab_Urlnosql.csv
@@ -57,6 +59,7 @@ Files and directories
 - app/locale/pl_PL/Luigifab_Urlnosql.csv
 - app/locale/pt_BR/Luigifab_Urlnosql.csv
 - app/locale/pt_PT/Luigifab_Urlnosql.csv
+- app/locale/ro_RO/Luigifab_Urlnosql.csv
 - app/locale/ru_RU/Luigifab_Urlnosql.csv
 - app/locale/sk_SK/Luigifab_Urlnosql.csv
 - app/locale/tr_TR/Luigifab_Urlnosql.csv

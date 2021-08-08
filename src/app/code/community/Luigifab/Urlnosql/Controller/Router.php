@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/20/04/2021
+ * Updated D/18/07/2021
  *
  * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -76,7 +76,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 
 			$candidates = [];
 			$oldids  = Mage::getStoreConfig('urlnosql/general/oldids');
-			$product = $this->getCandidateProduct($id);
+			$product = $this->getProduct($id);
 			$product = empty($product->getId()) ? null : $product;
 
 			$debug[] = 'ROUTER';
@@ -144,7 +144,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			while (!empty($candidates)) {
 
 				$product = array_shift($candidates); // un id ou un objet produit (du premier au dernier)
-				$product = is_object($product) ? $product : $this->getCandidateProduct($product);
+				$product = is_object($product) ? $product : $this->getProduct($product);
 
 				$debug[] = ($txt = 'Checking product #'.$product->getId());
 
@@ -182,11 +182,11 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		return false;
 	}
 
-	private function getCandidateProduct(int $productId) {
+	private function getProduct(int $id) {
 
 		return Mage::getResourceModel('catalog/product_collection')
 			->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes').' status visibility')))
-			->addIdFilter($productId)
+			->addIdFilter($id)
 			->addStoreFilter()
 			->setPageSize(1)
 			->getFirstItem();
