@@ -24,3 +24,6 @@
 "List of addresses:","Liste des adresses :"
 "(%d) <span lang=""%s"">%s</span>:","(%d) <span lang=""%s"">%s</span> :"
 "(%d) %s:","(%d) %s :"
+"%s kB","%s ko"
+"%s MB","%s Mo"
+"%s GB","%s Go"

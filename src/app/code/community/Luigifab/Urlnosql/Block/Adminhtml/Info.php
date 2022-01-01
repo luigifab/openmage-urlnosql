@@ -1,11 +1,11 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/03/07/2021
+ * Updated M/28/09/2021
  *
- * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2020-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -65,13 +65,13 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		// affiche la liste des attributs et ce produit remplace
 		if (!empty($oldids) && !empty($product->getData($oldids))) {
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>',
-				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix());
+				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix());
 			$html[] = '<br />'.$this->__('This product replaces the following deleted products (via the <em>%s</em> attribute): %s.',
 				$oldids, str_replace([' ', ',', ', ,', ',  ,', ',,'], ', ', $product->getData($oldids))).'</p>';
 		}
 		else {
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>',
-				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductURLsuffix()).'</p>';
+				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix()).'</p>';
 		}
 
 		// détail de l'url
@@ -97,7 +97,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			}
 
 			if (!empty($value))
-				$value = $this->helper('urlnosql')->normalizeChars(Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $storeId), $value);
+				$value = $this->helper('urlnosql')->normalizeChars(Mage::getStoreConfig('general/locale/code', $storeId), $value);
 
 			if (($attribute != 'entity_id') && !is_object($source)) {
 				$html[] = '<li>'.$this->__('%s <span %s>Warning! This attribute does not exist.</span>', $attribute, $css).'</li>';
@@ -124,20 +124,20 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$html[] = '<p>'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
-		$code   = Mage::getSingleton('core/locale')->getLocaleCode();
-		$stores = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
-		$number = $stores->getSize();
+		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
+		$count   = $stores->getSize();
 
 		foreach ($stores as $id => $store) {
 
 			$url    = $product->setStoreId($id)->getProductUrl();
-			$marker = ($number > 1) && ($storeId == $id);
-			$locale = Mage::getStoreConfig(Mage_Core_Model_Locale::XML_PATH_DEFAULT_LOCALE, $id);
+			$marker = ($count > 1) && ($storeId == $id);
+			$locale = substr(Mage::getStoreConfig('general/locale/code', $id), 0, 2);
 
-			if ($locale != $code) {
+			if ($locale != $current) {
 				$html[] = '<li>'.
 					($marker ? '<strong>' : '').
-						$this->__('(%d) <span lang="%s">%s</span>:', $id, substr($locale, 0, 2), $store->getData('name')).
+						$this->__('(%d) <span lang="%s">%s</span>:', $id, $locale, $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
 					($marker ? '</strong>' : '').
 				'</li>';

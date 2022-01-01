@@ -1,11 +1,11 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated D/18/07/2021
+ * Updated V/24/12/2021
  *
- * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2020-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -28,12 +28,15 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			array_unshift($debug, '#{'.gmdate('c').'}#');
 			array_unshift($debug, getenv('REQUEST_URI'));
 
-			if (empty(session_id()))
-				$session = Mage::getSingleton('core/session', ['name' => Mage_Core_Controller_Front_Action::SESSION_NAMESPACE])->start();
-			else
+			if (empty(session_id())) {
+				$session = Mage::app()->getStore()->isAdmin() ? Mage_Adminhtml_Controller_Action::SESSION_NAMESPACE : Mage_Core_Controller_Front_Action::SESSION_NAMESPACE;
+				$session = Mage::getSingleton('core/session', ['name' => $session])->start();
+			}
+			else {
 				$session = Mage::getSingleton('core/session');
+			}
 
-			$data  = $session->getData('urlnosql');
+			$data = $session->getData('urlnosql');
 			if (empty($data)) $data = [];
 			array_unshift($data, $debug);
 			$session->setData('urlnosql', array_slice($data, 0, 10));
@@ -91,7 +94,13 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				if (($product->getData('status') != Mage_Catalog_Model_Product_Status::STATUS_ENABLED) ||
 				    ($product->getData('visibility') == Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE)) {
 
-					if (!empty($oldids)) {
+					if (empty($oldids)) {
+						$candidates = Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED;
+						$candidates = array_merge(
+							Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),
+							Mage::getResourceSingleton('catalog/product_link')->getParentIdsByChild($id, $candidates));
+					}
+					else {
 						$candidates = Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED;
 						$candidates = array_merge(
 							Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),
@@ -102,12 +111,6 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 								->addAttributeToFilter($oldids, ['regexp' => '[[:<:]]'.$id.'[[:>:]]'])
 								->addStoreFilter()
 								->getAllIds());
-					}
-					else {
-						$candidates = Mage_Catalog_Model_Product_Link::LINK_TYPE_GROUPED;
-						$candidates = array_merge(
-							Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),
-							Mage::getResourceSingleton('catalog/product_link')->getParentIdsByChild($id, $candidates));
 					}
 
 					$debug[] = $txt.' not enabled/visible';
@@ -137,7 +140,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				$debug[] = $candidates;
 			}
 
-			// 4 8 15 16 23 42... SI NOUS AVONS DES CANDIDATS
+			// 4 8 15 16 23 42 - SI NOUS AVONS DES CANDIDATS
 			// soit dans le ou les ids produits parents (dans le cas d'un produit non visible)
 			// soit dans le produit chargé initialement
 			// soit dans le ou les ids produits de remplacement
@@ -157,6 +160,13 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 					$url = $product->getProductUrl();
 					$debug[] = $txt.' product enabled/visible';
 					$debug[] = $txt.' the url must be: '.$url;
+
+					if (Mage::app()->getStore()->isAdmin()) {
+						$debug[] = ' 301';
+						self::saveDebug($debug);
+						header('Location: '.Mage::helper('adminhtml')->getUrl('adminhtml/catalog_product/edit', ['id' => $id]), true, 301);
+						exit(0); // stop redirection 301
+					}
 
 					if (mb_strpos($url, '/'.$params) === false) {
 						$debug[] = ' 301';
@@ -182,7 +192,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		return false;
 	}
 
-	private function getProduct(int $id) {
+	protected function getProduct(int $id) {
 
 		return Mage::getResourceModel('catalog/product_collection')
 			->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes').' status visibility')))

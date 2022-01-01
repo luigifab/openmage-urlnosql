@@ -1,1 +1,4 @@
 "%s: %s","<span lang=""en"">%s</span>: %s"
+"%s kB","%s Кб"
+"%s MB","%s Мб"
+"%s GB","%s ГБ"

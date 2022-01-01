@@ -1,11 +1,11 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated S/31/07/2021
+ * Updated J/23/12/2021
  *
- * Copyright 2015-2021 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020-2021 | Fabrice Creuzot <fabrice~cellublue~com>
+ * Copyright 2020-2022 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://www.luigifab.fr/openmage/urlnosql
  *
  * This program is free software, you can redistribute it or modify
@@ -33,13 +33,27 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 				$text = 'invalid pass';
 			}
 			else {
-				if (empty(Mage::getSingleton('core/cookie')->get('urlnosql')))
-					$link = ' - <a href="'.Mage::getUrl('*/*/start', ['pass' => $passwd]).'">start</a>';
-				else
-					$link = ' - <a href="'.Mage::getUrl('*/*/stop', ['pass' => $passwd]).'">stop</a>';
+				$text = Mage::getSingleton('core/session')->getData('urlnosql');
 
-				$text = print_r(Mage::getSingleton('core/session')->getData('urlnosql'), true);
-				$text = str_replace([Mage::getBaseDir(), '#{', '}#'], ['', '<b>', '</b>'], htmlspecialchars($text));
+				if (empty(Mage::getSingleton('core/cookie')->get('urlnosql'))) {
+					$link = ' - <a href="'.Mage::getUrl('*/*/start', ['pass' => $passwd]).'">start</a>';
+					if (empty($text))
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'" style="color:#666;">clear</a>';
+					else
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'">clear</a>';
+				}
+				else {
+					$link = ' - <a href="'.Mage::getUrl('*/*/stop', ['pass' => $passwd]).'">stop</a>';
+					if (empty($text))
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'" style="color:#666;">clear</a>';
+					else
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'">clear</a>';
+				}
+
+				if (empty($text))
+					$text = 'no data';
+				else
+					$text = str_replace([Mage::getBaseDir(), '#{', '}#'], ['', '<b>', '</b>'], htmlspecialchars(print_r($text, true)));
 			}
 		}
 		else {
@@ -67,6 +81,21 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 		else {
 			$this->_redirect('*/*/index');
 		}
+	}
+
+	public function clearAction() {
+
+		Mage::register('turpentine_nocache_flag', true, true);
+
+		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
+		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
+			Mage::getSingleton('core/session')->setData('urlnosql', null);
+			$this->_redirect('*/*/index', ['pass' => $passwd]);
+		}
+		else {
+			$this->_redirect('*/*/index');
+		}
+
 	}
 
 	public function stopAction() {
