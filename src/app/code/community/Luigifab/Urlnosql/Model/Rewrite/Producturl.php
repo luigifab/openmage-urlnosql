@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated M/28/09/2021
+ * Updated M/11/01/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,23 +21,23 @@
 
 class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Product_Url {
 
-	private static $_cacheUrls = [];
+	protected static $_cache = [];
 
 	public function __construct() {
 
-		if (empty(self::$_cacheUrls) && Mage::app()->useCache('block_html')) {
-			self::$_cacheUrls = @json_decode(Mage::app()->loadCache('urlnosql_urls'), true);
+		if (empty(self::$_cache) && Mage::app()->useCache('block_html')) {
+			self::$_cache = @json_decode(Mage::app()->loadCache('urlnosql_urls'), true);
 			register_shutdown_function([$this, 'destruct']);
-			if (!is_array(self::$_cacheUrls))
-				self::$_cacheUrls = [];
+			if (!is_array(self::$_cache))
+				self::$_cache = [];
 		}
 	}
 
 	public function destruct() {
 
 		// une seule fois via register_shutdown_function
-		if (!empty(self::$_cacheUrls) && Mage::app()->useCache('block_html'))
-			Mage::app()->saveCache(json_encode(self::$_cacheUrls), 'urlnosql_urls',
+		if (!empty(self::$_cache) && Mage::app()->useCache('block_html'))
+			Mage::app()->saveCache(json_encode(self::$_cache), 'urlnosql_urls',
 				[Mage_Core_Model_Config::CACHE_TAG, Mage_Core_Block_Abstract::CACHE_GROUP]);
 	}
 
@@ -48,8 +48,8 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 			$storeId   = empty($product->getStoreId()) ? Mage::app()->getStore()->getId() : $product->getStoreId();
 			$productId = $product->getId();
 
-			if (!empty(self::$_cacheUrls[$storeId][$productId]))
-				return self::$_cacheUrls[$storeId][$productId];
+			if (!empty(self::$_cache[$storeId][$productId]))
+				return self::$_cache[$storeId][$productId];
 
 			$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 			$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
@@ -75,11 +75,11 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 					$values[] = $value;
 			}
 
-			self::$_cacheUrls[$storeId][$productId] = Mage::app()->getStore($storeId)->getBaseUrl().
+			self::$_cache[$storeId][$productId] = Mage::app()->getStore($storeId)->getBaseUrl().
 				preg_replace('#-{2,}#', '-', implode('-', $values)). // est vide si le produit n'existe pas
 				Mage::helper('catalog/product')->getProductUrlSuffix($storeId);
 
-			return self::$_cacheUrls[$storeId][$productId];
+			return self::$_cache[$storeId][$productId];
 		}
 
 		return parent::getUrl($product, $params);

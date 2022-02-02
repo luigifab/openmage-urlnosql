@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/25/01/2021
- * Updated V/12/02/2021
+ * Updated M/11/01/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -21,7 +21,7 @@
 
 class Luigifab_Urlnosql_Model_Rewrite_Productapi2 extends Mage_Catalog_Model_Product_Api_V2 {
 
-	private $_cache = [];
+	protected $_cache = [];
 
 	protected function _getProduct($productId, $store = null, $identifierType = null) {
 
