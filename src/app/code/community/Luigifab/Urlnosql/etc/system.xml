@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated V/05/11/2021
+ * Updated V/20/05/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -62,7 +62,6 @@
 						<attributes translate="label comment">
 							<label>Attributes to use</label>
 							<comment><![CDATA[Example: www.example.org/id-<strong>abc-xyz</strong>.html<br />Attributes separated by a space.]]></comment>
-							<frontend_type>text</frontend_type>
 							<sort_order>2</sort_order>
 							<show_in_default>1</show_in_default>
 							<show_in_website>0</show_in_website>
@@ -134,7 +133,6 @@
 						</debug_enabled>
 						<debug_password translate="label">
 							<label>Password</label>
-							<frontend_type>text</frontend_type>
 							<validate>validate-alphanum</validate>
 							<sort_order>22</sort_order>
 							<show_in_default>1</show_in_default>

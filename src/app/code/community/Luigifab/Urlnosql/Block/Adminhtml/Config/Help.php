@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/30/09/2021
+ * Updated V/20/05/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -25,12 +25,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 
 		$msg = $this->checkRewrites();
 		if ($msg !== true)
-			return sprintf('<p class="box">%s %s <span class="right"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
+			return sprintf('<p class="box">%s %s <span class="right">Stop russian war. <b>🇺🇦 Free Ukraine!</b> | <a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p><p class="box" style="margin-top:-5px; color:white; background-color:#E60000;"><strong>%s</strong><br />%s</p>',
 				'Luigifab/Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/openmage/urlnosql',
 				$this->__('INCOMPLETE MODULE INSTALLATION'),
 				$this->__('There is conflict (<em>%s</em>).', $msg));
 
-		return sprintf('<p class="box">%s %s <span class="right"><a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>',
+		return sprintf('<p class="box">%s %s <span class="right">Stop russian war. <b>🇺🇦 Free Ukraine!</b> | <a href="https://www.%s">%3$s</a> | ⚠ IPv6</span></p>',
 			'Luigifab/Urlnosql', $this->helper('urlnosql')->getVersion(), 'luigifab.fr/openmage/urlnosql');
 	}
 
@@ -44,7 +44,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Help extends Mage_Adminhtml_Block
 			['model' => 'catalog/product_attribute_backend_urlkey'],
 			['model' => 'catalog/product_url'],
 			['model' => 'catalog/url'],
-			['model' => 'sitemap_resource/catalog_product']
+			['model' => 'sitemap_resource/catalog_product'],
 		];
 
 		foreach ($rewrites as $rewrite) {
