@@ -1,7 +1,7 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated J/23/12/2021
+ * Updated D/26/06/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -75,7 +75,7 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 
 		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
 		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
-			Mage::getSingleton('core/cookie')->set('urlnosql', 1);
+			Mage::getSingleton('core/cookie')->set('urlnosql', 1, true);
 			$this->_redirect('*/*/index', ['pass' => $passwd]);
 		}
 		else {

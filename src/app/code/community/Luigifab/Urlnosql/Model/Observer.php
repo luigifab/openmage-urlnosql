@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated D/24/01/2021
+ * Updated V/24/06/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -59,7 +59,7 @@ class Luigifab_Urlnosql_Model_Observer {
 						$debug[] = 'Checking "'.$id.'" ('.trim($rewrite->getData('request_path'), '/').' - '.trim($rewrite->getData('target_path'), '/').')';
 
 						if (strncasecmp($id, 'product/', 8) === 0) {
-							$id = (array) explode('/', $id); // (yes)
+							$id = explode('/', $id);
 							$debug[] = 'Product #'.$id[1].' found!';
 							$router = new Luigifab_Urlnosql_Controller_Router();
 							$router->match($request->setPathInfo('catalog/product/view/id/'.$id[1]), true, $debug);

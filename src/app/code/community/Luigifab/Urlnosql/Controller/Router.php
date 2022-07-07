@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/24/12/2021
+ * Updated V/24/06/2022
  *
  * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -54,7 +54,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		// recherche
 		// au début $params est un array
 		$params = trim($request->getPathInfo(), '/');
-		$params = (array) explode('/', $params); // (yes)
+		$params = explode('/', $params);
 
 		if (count($params) == 1) {
 			// Array ( [0] => 300003-abc.html )
@@ -168,7 +168,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 						exit(0); // stop redirection 301
 					}
 
-					if (mb_strpos($url, '/'.$params) === false) {
+					if (!str_contains($url, '/'.$params)) {
 						$debug[] = ' 301';
 						self::saveDebug($debug);
 						header('Location: '.$url, true, 301);
