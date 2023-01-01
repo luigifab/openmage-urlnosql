@@ -1,12 +1,12 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated D/26/06/2022
+ * Updated J/03/11/2022
  *
- * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020-2022 | Fabrice Creuzot <fabrice~cellublue~com>
- * https://www.luigifab.fr/openmage/urlnosql
+ * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
+ * https://github.com/luigifab/openmage-urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -21,14 +21,17 @@
 
 class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Action {
 
-	public function indexAction() {
-
+	public function preDispatch() {
 		Mage::register('turpentine_nocache_flag', true, true);
+		parent::preDispatch();
+	}
+
+	public function indexAction() {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled') && Mage::getStoreConfigFlag('urlnosql/general/debug_enabled')) {
 
-			$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
-			if (!empty($passwd) && ($this->getRequest()->getParam('pass') != $passwd)) {
+			$pass = Mage::getStoreConfig('urlnosql/general/debug_password');
+			if (!empty($pass) && ($this->getRequest()->getParam('pass') != $pass)) {
 				$link = '';
 				$text = 'invalid pass';
 			}
@@ -36,18 +39,18 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 				$text = Mage::getSingleton('core/session')->getData('urlnosql');
 
 				if (empty(Mage::getSingleton('core/cookie')->get('urlnosql'))) {
-					$link = ' - <a href="'.Mage::getUrl('*/*/start', ['pass' => $passwd]).'">start</a>';
+					$link = ' - <a href="'.Mage::getUrl('*/*/start', ['pass' => $pass]).'">start</a>';
 					if (empty($text))
-						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'" style="color:#666;">clear</a>';
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $pass]).'" style="color:#666;">clear</a>';
 					else
-						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'">clear</a>';
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $pass]).'">clear</a>';
 				}
 				else {
-					$link = ' - <a href="'.Mage::getUrl('*/*/stop', ['pass' => $passwd]).'">stop</a>';
+					$link = ' - <a href="'.Mage::getUrl('*/*/stop', ['pass' => $pass]).'">stop</a>';
 					if (empty($text))
-						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'" style="color:#666;">clear</a>';
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $pass]).'" style="color:#666;">clear</a>';
 					else
-						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $passwd]).'">clear</a>';
+						$link .= ' - <a href="'.Mage::getUrl('*/*/clear', ['pass' => $pass]).'">clear</a>';
 				}
 
 				if (empty($text))
@@ -71,12 +74,10 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 
 	public function startAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
-		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
-		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
+		$pass = Mage::getStoreConfig('urlnosql/general/debug_password');
+		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 			Mage::getSingleton('core/cookie')->set('urlnosql', 1, true);
-			$this->_redirect('*/*/index', ['pass' => $passwd]);
+			$this->_redirect('*/*/index', ['pass' => $pass]);
 		}
 		else {
 			$this->_redirect('*/*/index');
@@ -85,27 +86,22 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 
 	public function clearAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
-		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
-		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
+		$pass = Mage::getStoreConfig('urlnosql/general/debug_password');
+		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 			Mage::getSingleton('core/session')->setData('urlnosql', null);
-			$this->_redirect('*/*/index', ['pass' => $passwd]);
+			$this->_redirect('*/*/index', ['pass' => $pass]);
 		}
 		else {
 			$this->_redirect('*/*/index');
 		}
-
 	}
 
 	public function stopAction() {
 
-		Mage::register('turpentine_nocache_flag', true, true);
-
-		$passwd = Mage::getStoreConfig('urlnosql/general/debug_password');
-		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($passwd) || ($this->getRequest()->getParam('pass') == $passwd))) {
+		$pass = Mage::getStoreConfig('urlnosql/general/debug_password');
+		if (Mage::getStoreConfigFlag('urlnosql/general/debug_enabled') && (empty($pass) || ($this->getRequest()->getParam('pass') == $pass))) {
 			Mage::getSingleton('core/cookie')->delete('urlnosql');
-			$this->_redirect('*/*/index', ['pass' => $passwd]);
+			$this->_redirect('*/*/index', ['pass' => $pass]);
 		}
 		else {
 			$this->_redirect('*/*/index');

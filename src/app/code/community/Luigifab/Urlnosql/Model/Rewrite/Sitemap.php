@@ -1,12 +1,12 @@
 <?php
 /**
  * Created L/29/06/2015
- * Updated M/09/02/2021
+ * Updated M/06/12/2022
  *
- * Copyright 2015-2022 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
- * Copyright 2020-2022 | Fabrice Creuzot <fabrice~cellublue~com>
- * https://www.luigifab.fr/openmage/urlnosql
+ * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
+ * https://github.com/luigifab/openmage-urlnosql
  *
  * This program is free software, you can redistribute it or modify
  * it under the terms of the GNU General Public License (GPL) as published
@@ -20,6 +20,8 @@
  */
 
 class Luigifab_Urlnosql_Model_Rewrite_Sitemap extends Mage_Sitemap_Model_Resource_Catalog_Product {
+
+	protected $_storeId;
 
 	public function getCollection($storeId) {
 		$this->_storeId = $storeId;
