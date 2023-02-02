@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated M/28/09/2021
+ * Updated S/14/01/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -26,7 +26,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 	}
 
 	public function getTabTitle() {
-		return null;
+		return '';
 	}
 
 	public function isHidden() {
@@ -128,16 +128,16 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
 		$count   = $stores->getSize();
 
-		foreach ($stores as $id => $store) {
+		foreach ($stores as $sid => $store) {
 
-			$url    = $product->setStoreId($id)->getProductUrl();
-			$marker = ($count > 1) && ($storeId == $id);
-			$locale = substr(Mage::getStoreConfig('general/locale/code', $id), 0, 2);
+			$url    = $product->setStoreId($sid)->getProductUrl();
+			$marker = ($count > 1) && ($storeId == $sid);
+			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2);
 
 			if ($locale != $current) {
 				$html[] = '<li>'.
 					($marker ? '<strong>' : '').
-						$this->__('(%d) <span lang="%s">%s</span>:', $id, $locale, $store->getData('name')).
+						$this->__('(%d) <span lang="%s">%s</span>:', $sid, $locale, $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
 					($marker ? '</strong>' : '').
 				'</li>';
@@ -145,7 +145,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 			else {
 				$html[] = '<li>'.
 					($marker ? '<strong>' : '').
-						$this->__('(%d) %s:', $id, $store->getData('name')).
+						$this->__('(%d) %s:', $sid, $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
 					($marker ? '</strong>' : '').
 				'</li>';

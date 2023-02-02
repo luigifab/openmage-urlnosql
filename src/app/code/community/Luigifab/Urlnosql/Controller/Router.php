@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated V/24/06/2022
+ * Updated J/05/01/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -158,6 +158,9 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 				    ($product->getData('visibility') != Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE)) {
 
 					$url = $product->getProductUrl();
+					if (Mage::getStoreConfigFlag('urlnosql/general/keep_query_string') && !empty($query = getenv('QUERY_STRING')))
+						$url .= '?'.$query;
+
 					$debug[] = $txt.' product enabled/visible';
 					$debug[] = $txt.' the url must be: '.$url;
 

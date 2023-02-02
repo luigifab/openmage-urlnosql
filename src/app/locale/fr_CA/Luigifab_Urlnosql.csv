@@ -8,6 +8,8 @@
 "Allows to redirect deleted products to the new ones. The attribute must be unique and global. On the product page, values separated by a comma or a space.","Permet de rediriger les produits supprimés vers les nouveaux. L'attribut doit être unique et global. Sur la fiche produit, valeurs séparées par une virgule ou par un espace."
 "Redirect non rewritten URLs","Rediriger les URLs non réécrites"
 "For example <em>catalog/product/view/id</em> to <em>id-xyz.html</em>.","Par exemple <em lang=""en"">catalog/product/view/id</em> vers <em>id-xyz.html</em>."
+"Keep URLs parameters","Conserver les paramètres des URLs"
+"Keep <em>QUERY_STRING</em> when URL is redirected.","Conserve la <em>QUERY_STRING</em> lorsque l'URL est redirigée."
 "Automatically display the product URL rewrite tab","Afficher automatiquement l'onglet réécriture d'URL produit"
 "When displaying the modification page of a product in the backend.","Lors de l'affichage de la page de modification d'un produit dans le back-office."
 "Example with the latest created product","Exemple avec le dernier produit créé"
