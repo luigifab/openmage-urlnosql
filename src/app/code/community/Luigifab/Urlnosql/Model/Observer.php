@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated V/24/06/2022
+ * Updated M/16/05/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -100,6 +100,20 @@ class Luigifab_Urlnosql_Model_Observer {
 
 				$debug[] = 'No products found!';
 				Luigifab_Urlnosql_Controller_Router::saveDebug($debug);
+			}
+		}
+	}
+
+	// EVENT adminhtml_catalog_category_tabs (adminhtml)
+	public function addCategoryTab(Varien_Event_Observer $observer) {
+
+		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
+			$tabs = $observer->getData('tabs');
+			if (!empty($tabs->getCategory()->getId()) && ($tabs->getCategory()->getLevel() > 1)) {
+				$tabs->addTab('category_url_rewrite', [
+					'label'     => Mage::helper('urlnosql')->__('Category URL rewrite'),
+					'content'   => $tabs->getLayout()->createBlock('urlnosql/adminhtml_categoryurls', 'category_url_rewrite')->toHtml(),
+				]);
 			}
 		}
 	}

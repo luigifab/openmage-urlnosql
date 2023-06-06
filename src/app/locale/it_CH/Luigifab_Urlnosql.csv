@@ -10,6 +10,7 @@
 "When displaying the modification page of a product in the backend.","Quando si visualizza la pagina di modifica di un prodotto nel back-office."
 "Example with the latest created product","Esempio con l'ultimo prodotto realizzato"
 "See {{Product URL rewrite}}.","Vedere {{Rewriting dell'URL prodotto}}."
+"List of addresses:","Elenco indirizzi:"
 "INCOMPLETE MODULE INSTALLATION","INSTALLAZIONE INCOMPLETA DEL MODULO"
 "Format: <strong>www.example.org/%s%s</strong>","Formato: <strong>www.esempio.org/<span lang=""en"">%s</span>%s</strong>"
 "This product replaces the following deleted products (via the <em>%s</em> attribute): %s.","Questo prodotto sostituisce quelli rimossi (via l'attributo <em lang=""en"">%s</em>): %s."
@@ -18,4 +19,3 @@
 "%s: %s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>","<span lang=""en"">%s</span>: %s <span %s>Attenzione! Questo attributo non è utilizzato nella lista dei prodotti (<a %s>modificare l'attributo</a>).</span>"
 "%s <span %s>Warning! This attribute is not used in product listing (<a %s>edit attribute</a>).</span>","<span lang=""en"">%s</span> <span %s>Attenzione! Questo attributo non è usato nella lista dei prodotti (<a %s>modificare l'attributo</a>).</span>"
 "%s: %s","<span lang=""en"">%s</span>: %s"
-"List of addresses:","Elenco indirizzi:"

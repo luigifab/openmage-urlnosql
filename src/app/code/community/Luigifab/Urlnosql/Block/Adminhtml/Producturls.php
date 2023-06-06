@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated S/14/01/2023
+ * Updated M/16/05/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -19,7 +19,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
+class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
 
 	public function getTabLabel() {
 		return $this->__('Product URL rewrite');
@@ -45,6 +45,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$storeId = $this->getRequest()->getParam('store');
 		$storeId = empty($storeId) ? Mage::app()->getDefaultStoreView()->getId() : Mage::app()->getStore($storeId)->getId();
 
+		$productId  = $product->getId();
 		$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 		$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
@@ -88,7 +89,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 
 			// https://stackoverflow.com/a/30519730
 			if (is_object($source)) {
-				$value = $product->getResource()->getAttributeRawValue($product->getId(), $attribute, $storeId);
+				$value = $product->getResource()->getAttributeRawValue($productId, $attribute, $storeId);
 				if (in_array($source->getData('frontend_input'), ['select', 'multiselect']))
 					$value = $product->getResource()->getAttribute($attribute)->setStoreId($storeId)->getSource()->getOptionText($value);
 			}
@@ -125,29 +126,38 @@ class Luigifab_Urlnosql_Block_Adminhtml_Info extends Mage_Adminhtml_Block_Widget
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
 		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
-		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc');
-		$count   = $stores->getSize();
+		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc'); // without admin
+		$single  = $stores->getSize() == 1;
+		$wsites  = $product->getWebsiteIds();
 
 		foreach ($stores as $sid => $store) {
 
+			if (!in_array($store->getWebsiteId(), $wsites))
+				continue;
+
 			$url    = $product->setStoreId($sid)->getProductUrl();
-			$marker = ($count > 1) && ($storeId == $sid);
+			$marker = !$single && ($storeId == $sid);
 			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2);
 
+			$disabled = $product->getResource()->getAttributeRawValue($productId, 'status', $sid) != Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
 			if ($locale != $current) {
 				$html[] = '<li>'.
+					($disabled ? '<em>' : '').
 					($marker ? '<strong>' : '').
 						$this->__('(%d) <span lang="%s">%s</span>:', $sid, $locale, $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
 					($marker ? '</strong>' : '').
+					($disabled ? ' '.$this->__('(product disabled)').'</em>': '').
 				'</li>';
 			}
 			else {
 				$html[] = '<li>'.
+					($disabled ? '<em>' : '').
 					($marker ? '<strong>' : '').
 						$this->__('(%d) %s:', $sid, $store->getData('name')).
 						' <a href="'.$url.'">'.$url.'</a>'.
 					($marker ? '</strong>' : '').
+					($disabled ? ' ('.$this->__('Disabled').')</em>': '').
 				'</li>';
 			}
 		}

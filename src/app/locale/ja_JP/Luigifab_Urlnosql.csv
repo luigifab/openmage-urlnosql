@@ -1,6 +1,6 @@
-"%s: %s","<span lang=""en"">%s</span>：%s"
 "(%d) <span lang=""%s"">%s</span>:","（%d）<span lang=""%s"">%s</span>："
 "(%d) %s:","（%d）%s："
+"%s: %s","<span lang=""en"">%s</span>：%s"
 "%s kB","%s ko"
 "%s MB","%s Mo"
 "%s GB","%s Go"

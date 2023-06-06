@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created L/03/08/2015
- * Updated M/28/02/2017
+ * Updated M/16/05/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -24,10 +24,8 @@
 		<reference name="product_tabs">
 			<action method="addTab" ifconfig="urlnosql/general/enabled">
 				<name>product_url_rewrite</name>
-				<block>urlnosql/adminhtml_info</block>
+				<block>urlnosql/adminhtml_producturls</block>
 			</action>
-		</reference>
-		<reference name="product_tabs">
 			<action method="setActiveTab" ifconfig="urlnosql/general/show_rewrite_tab">
 				<name>product_url_rewrite</name>
 			</action>

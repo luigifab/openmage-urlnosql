@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/25/08/2015
- * Updated S/03/12/2022
+ * Updated M/16/05/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -35,7 +35,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Config_Example extends Mage_Adminhtml_Bl
 				->getFirstItem();
 
 			if (!empty($product->getId()))
-				return Mage::getBlockSingleton('urlnosql/adminhtml_info')->_toHtml($element->getLegend(), $product);
+				return Mage::getBlockSingleton('urlnosql/adminhtml_producturls')->_toHtml($element->getLegend(), $product);
 		}
 	}
 }

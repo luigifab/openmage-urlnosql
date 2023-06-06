@@ -25,10 +25,11 @@ Rewrite
 - global | model | catalog/url                                      | urlnosql/rewrite_url
 - global | model | sitemap_resource/catalog_product                 | urlnosql/rewrite_sitemap
 Event
-- frontend | catalog_controller_product_init_before             | urlnosql/observer::updateCategoryId
-- frontend | controller_action_predispatch_catalog_product_view | urlnosql/observer::checkProductUrl
-- global   | controller_front_init_before                       | urlnosql/observer::redirectToRewrite
-- global   | controller_front_init_routers                      | Luigifab_Urlnosql_Controller_Router::initControllerRouters
+- adminhtml | adminhtml_catalog_category_tabs                    | urlnosql/observer::addCategoryTab
+- frontend  | catalog_controller_product_init_before             | urlnosql/observer::updateCategoryId
+- frontend  | controller_action_predispatch_catalog_product_view | urlnosql/observer::checkProductUrl
+- global    | controller_front_init_before                       | urlnosql/observer::redirectToRewrite
+- global    | controller_front_init_routers                      | Luigifab_Urlnosql_Controller_Router::initControllerRouters
 Cron
 - none
 Database
