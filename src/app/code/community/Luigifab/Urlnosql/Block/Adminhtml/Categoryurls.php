@@ -1,7 +1,7 @@
 <?php
 /**
  * Created M/16/05/2023
- * Updated M/16/05/2023
+ * Updated J/21/09/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -63,7 +63,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Bloc
 		$html[] = '<p>'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
-		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2); // not mb_substr
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc'); // without admin
 		$single  = $stores->getSize() == 1;
 
@@ -83,7 +83,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Bloc
 
 			$url    = $categoryStore->getUrl();
 			$marker = !$single && ($storeId == $sid);
-			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2);
+			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2); // not mb_substr
 
 			if (empty($categoryStore->getData('is_active'))) {
 				$html[] = '<li><em>'.

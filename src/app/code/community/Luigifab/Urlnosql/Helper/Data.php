@@ -1,7 +1,7 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/05/01/2023
+ * Updated J/21/09/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -122,7 +122,7 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 	public function normalizeChars(string $locale, string $value) {
 
 		$opts = transliterator_list_ids();
-		$code = str_replace('_', '-', strtolower($locale)).'_Latn/BGN';
+		$code = str_replace('_', '-', strtolower($locale)).'_Latn/BGN'; // not mb_strtolower
 
 		if (in_array($code, $opts))
 			$value = transliterator_transliterate($code.'; Any-Latin; Latin-ASCII; [^\u001F-\u007f] remove; Lower()', $value);

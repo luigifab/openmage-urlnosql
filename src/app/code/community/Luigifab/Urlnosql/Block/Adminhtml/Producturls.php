@@ -1,7 +1,7 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated M/16/05/2023
+ * Updated J/21/09/2023
  *
  * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
@@ -125,7 +125,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 		$html[] = '<p>'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
-		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2);
+		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2); // not mb_substr
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc'); // without admin
 		$single  = $stores->getSize() == 1;
 		$wsites  = $product->getWebsiteIds();
@@ -137,7 +137,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 
 			$url    = $product->setStoreId($sid)->getProductUrl();
 			$marker = !$single && ($storeId == $sid);
-			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2);
+			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2); // not mb_substr
 
 			$disabled = $product->getResource()->getAttributeRawValue($productId, 'status', $sid) != Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
 			if ($locale != $current) {
