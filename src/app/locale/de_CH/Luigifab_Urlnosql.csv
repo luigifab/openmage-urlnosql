@@ -8,7 +8,6 @@
 "Allows to redirect deleted products to the new ones. The attribute must be unique and global. On the product page, values separated by a comma or a space.","Ermöglicht, gelöschte Attribute zu Neuen umzuleiten. Das Attribut muss einzigartig und global sein. Auf dem Produktblatt durch ein Komma getrennte Werte."
 "Automatically display the product URL rewrite tab","Die Produkt-URL Neuschrift Tab automatisch anzeigen"
 "When displaying the modification page of a product in the backend.","Bei der Anzeige der Bearbeitungsseite eines Produkts im Backend."
-"Example with the latest created product","Beispiel mit dem neuesten Produkt"
 "See {{Product URL rewrite}}.","Siehe {{Produkt-URL Neuschrift}}."
 "List of addresses:","Adressenliste:"
 "Format: <strong>www.example.org/%s%s</strong>","Format: <strong>www.beispiel.org/<span lang=""en"">%s</span>%s</strong>"

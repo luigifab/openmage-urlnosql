@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated J/21/09/2023
+ * Updated S/23/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -22,7 +22,7 @@
 <config>
 	<modules>
 		<Luigifab_Urlnosql>
-			<version>4.5.3</version>
+			<version>4.6.0</version>
 		</Luigifab_Urlnosql>
 	</modules>
 	<global>
@@ -148,4 +148,11 @@
 			</adminhtml>
 		</routers>
 	</admin>
+	<default>
+		<urlnosql>
+			<general>
+				<ignore>test</ignore>
+			</general>
+		</urlnosql>
+	</default>
 </config>

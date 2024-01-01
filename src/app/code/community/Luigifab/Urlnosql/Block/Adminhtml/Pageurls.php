@@ -1,6 +1,6 @@
 <?php
 /**
- * Created M/16/05/2023
+ * Created S/16/12/2023
  * Updated S/16/12/2023
  *
  * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
@@ -19,7 +19,7 @@
  * GNU General Public License (GPL) for more details.
  */
 
-class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
+class Luigifab_Urlnosql_Block_Adminhtml_Pageurls extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
 
 	public function getTabLabel() {
 		return $this->__('URL rewrite');
@@ -34,15 +34,14 @@ class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Bloc
 	}
 
 	public function canShowTab() {
-		$category = Mage::registry('current_category');
-		return is_object($category) && !empty($category->getId()) && ($category->getLevel() > 1);
+		$page = Mage::registry('cms_page');
+		return is_object($page) && !empty($page->getId());
 	}
 
 	public function _toHtml() {
 
-		$category = Mage::registry('current_category');
-		$storeId  = $this->getRequest()->getParam('store');
-		$storeId  = empty($storeId) ? Mage::app()->getDefaultStoreView()->getId() : Mage::app()->getStore($storeId)->getId();
+		$page    = Mage::registry('cms_page');
+		$storeId = Mage::app()->getDefaultStoreView()->getId();
 
 		$html = [];
 		$html[] = '<div class="entry-edit">';
@@ -54,26 +53,19 @@ class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Bloc
 		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2); // not mb_substr
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc'); // without admin
 		$single  = count($stores) == 1;
+		$slist   = $page->getData('store_id');
+		$all     = empty($slist) || !is_array($slist) || ($slist == [0]);
 
 		foreach ($stores as $sid => $store) {
 
-			if (!str_contains($category->getPath(), '/'.$store->getRootCategoryId().'/'))
+			if (!$all && !in_array($sid, $slist))
 				continue;
 
-			Mage::app()->setCurrentStore($store);
-			$categoryStore = Mage::getResourceModel('catalog/category_collection')
-			    ->setStore($store)
-			    ->addIdFilter($category->getId())
-			    ->addAttributeToSelect('url_key')
-			    ->addAttributeToSelect('is_active')
-			    ->addUrlRewriteToResult()
-			    ->getFirstItem();
-
-			$url    = $categoryStore->getUrl();
+			$url    = $store->getBaseUrl().$page->getData('identifier');
 			$marker = !$single && ($storeId == $sid);
 			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2); // not mb_substr
 
-			$disabled = empty($categoryStore->getData('is_active'));
+			$disabled = empty($page->getData('is_active'));
 			$html[] = '<li>'.
 				($disabled ? '<em>' : '').
 				($marker ? '<strong>' : '').
@@ -82,12 +74,10 @@ class Luigifab_Urlnosql_Block_Adminhtml_Categoryurls extends Mage_Adminhtml_Bloc
 						$this->__('(%d) %s:', $sid, $store->getData('name'))
 					).' <a href="'.$url.'">'.$url.'</a>'.
 				($marker ? '</strong>' : '').
-				' (<a href="'.$store->getUrl('catalog/category/view', ['id' => $categoryStore->getId()]).'">id</a>)'.
-				($disabled ? ' '.$this->__('(category disabled)').'</em>': '').
+				' (<a href="'.$store->getUrl('cms/page/view', ['id' => $page->getId()]).'">id</a>)'.
+				($disabled ? ' '.$this->__('(page disabled)').'</em>': '').
 			'</li>';
 		}
-
-		Mage::app()->setCurrentStore(0);
 
 		$html[] = '</ul>';
 		$html[] = '</fieldset>';

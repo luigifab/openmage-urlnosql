@@ -3,7 +3,7 @@
  * Created L/25/01/2021
  * Updated M/11/01/2022
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql

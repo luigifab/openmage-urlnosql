@@ -1,9 +1,9 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated J/03/11/2022
+ * Updated S/23/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -22,8 +22,36 @@
 class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Action {
 
 	public function preDispatch() {
+
 		Mage::register('turpentine_nocache_flag', true, true);
-		parent::preDispatch();
+		$this->getResponse()
+			->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+			->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+
+		$isBot = true;
+		$userAgent = getenv('HTTP_USER_AGENT');
+
+		if (!empty($userAgent) && (mb_stripos($userAgent, 'bot') === false)) {
+			$isBot = false;
+			// @see Mage_Log_Model_Visitor
+			$ignoreAgents = Mage::getConfig()->getNode('global/ignore_user_agents');
+			if (!empty($ignoreAgents)) {
+				$ignoreAgents = $ignoreAgents->asArray();
+				foreach ($ignoreAgents as $ignoreAgent) {
+					if (mb_stripos($userAgent, $ignoreAgent) !== false) {
+						$isBot = true;
+						break;
+					}
+				}
+			}
+		}
+
+		if ($isBot) {
+			$this->setFlag('', Mage_Core_Controller_Front_Action::FLAG_NO_DISPATCH, true);
+			$this->getResponse()->setHttpResponseCode(404);
+		}
+
+		return parent::preDispatch();
 	}
 
 	public function indexAction() {
@@ -56,7 +84,7 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 				if (empty($text))
 					$text = 'no data';
 				else
-					$text = str_replace([Mage::getBaseDir(), '#{', '}#'], ['', '<b>', '</b>'], htmlspecialchars(print_r($text, true)));
+					$text = str_replace([BP, '#{', '}#'], ['', '<b>', '</b>'], htmlspecialchars(print_r($text, true)));
 			}
 		}
 		else {
@@ -64,12 +92,10 @@ class Luigifab_Urlnosql_DebugController extends Mage_Core_Controller_Front_Actio
 			$text = 'disabled';
 		}
 
-		$this->getResponse()->setBody(
-			'<html lang="en"><head><title>urlnosql</title>'.
-			'<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'.
-			'<meta name="robots" content="noindex,nofollow"></head><body><pre style="white-space:pre-wrap;">'.
-			date('c').$link.'<br><br>'.$text.
-			'</pre></body></html>');
+		$this->getResponse()
+			->setHttpResponseCode(200)
+			->setHeader('Content-Type', 'text/html; charset=utf-8', true)
+			->setBody('<html lang="en"><head><title>urlnosql</title><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="robots" content="noindex,nofollow"></head><body><pre style="white-space:pre-wrap;"><b>'.date('c').'</b>'.$link.'<br><br>'.$text.'</pre></body></html>');
 	}
 
 	public function startAction() {

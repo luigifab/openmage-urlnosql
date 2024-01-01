@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated L/03/10/2022
+ * Updated V/22/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -21,12 +21,13 @@
 
 class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Product_Url {
 
-	protected static $_cache = [];
+	protected static $_cache;
 
 	public function __construct() {
 
 		if (empty(self::$_cache) && Mage::app()->useCache('block_html')) {
-			self::$_cache = @json_decode(Mage::app()->loadCache('urlnosql_urls'), true);
+			self::$_cache = Mage::app()->loadCache('urlnosql_urls');
+			self::$_cache = empty(self::$_cache) ? [] : @json_decode(self::$_cache, true);
 			register_shutdown_function([$this, 'destruct']);
 			if (!is_array(self::$_cache))
 				self::$_cache = [];
@@ -62,7 +63,7 @@ class Luigifab_Urlnosql_Model_Rewrite_Producturl extends Mage_Catalog_Model_Prod
 
 				$source = $product->getResource()->getAttribute($attribute);
 
-				// https://stackoverflow.com/a/30519730
+				// @see https://stackoverflow.com/a/30519730
 				if (is_object($source)) {
 					$value = $product->getResource()->getAttributeRawValue($productId, $attribute, $storeId);
 					if (in_array($source->getData('frontend_input'), ['select', 'multiselect']))

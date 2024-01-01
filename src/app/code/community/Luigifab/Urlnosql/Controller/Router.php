@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/05/01/2023
+ * Updated D/03/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -66,7 +66,7 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			if (!empty($id[1]) && is_numeric($id[1]))
 				$id = (int) $id[1];
 		}
-		else if ($fromUs === true) {
+		else if ($fromUs) {
 			// Array ( [0] => catalog [1] => product [2] => view [3] => id [4] => 7 )
 			$id = array_search('id', $params);
 			$id = array_key_exists($id + 1, $params) ? $params[$id + 1] : false;
@@ -105,8 +105,8 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 						$candidates = array_merge(
 							Mage::getResourceSingleton('catalog/product_type_configurable')->getParentIdsByChild($id),
 							Mage::getResourceSingleton('catalog/product_link')->getParentIdsByChild($id, $candidates),
-							// https://mariadb.com/kb/en/mariadb/regular-expressions-overview/#word-boundaries
-							// https://dev.mysql.com/doc/refman/8.0/en/regexp.html
+							// @see https://mariadb.com/kb/en/mariadb/regular-expressions-overview/#word-boundaries
+							// @see https://dev.mysql.com/doc/refman/8.0/en/regexp.html
 							Mage::getResourceModel('catalog/product_collection')
 								->addAttributeToFilter($oldids, ['regexp' => '[[:<:]]'.$id.'[[:>:]]'])
 								->addStoreFilter()
@@ -128,8 +128,8 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 			// cherche les éventuels ids de remplacement
 			else if (!empty($oldids)) {
 
-				// https://mariadb.com/kb/en/mariadb/regular-expressions-overview/#word-boundaries
-				// https://dev.mysql.com/doc/refman/8.0/en/regexp.html
+				// @see https://mariadb.com/kb/en/mariadb/regular-expressions-overview/#word-boundaries
+				// @see https://dev.mysql.com/doc/refman/8.0/en/regexp.html
 				$candidates = Mage::getResourceModel('catalog/product_collection')
 					->addAttributeToFilter($oldids, ['regexp' => '[[:<:]]'.$id.'[[:>:]]'])
 					->addStoreFilter()
@@ -195,8 +195,9 @@ class Luigifab_Urlnosql_Controller_Router extends Mage_Core_Controller_Varien_Ro
 		return false;
 	}
 
-	protected function getProduct(int $id) {
+	protected function getProduct($id) {
 
+		// @todo no `(int) $id` for strict_types=1
 		return Mage::getResourceModel('catalog/product_collection')
 			->addAttributeToSelect(array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/attributes').' status visibility')))
 			->addIdFilter($id)

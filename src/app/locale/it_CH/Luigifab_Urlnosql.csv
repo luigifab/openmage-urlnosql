@@ -8,7 +8,6 @@
 "Allows to redirect deleted products to the new ones. The attribute must be unique and global. On the product page, values separated by a comma or a space.","Reindirizza i prodotti rimossi verso i nuovi. L'attributo deve essere unico e globale. Sul foglio prodotto, valori separati da una virgola o uno spazio."
 "Automatically display the product URL rewrite tab","Visualizza automaticamente la pagina rewriting dell'URL prodotto"
 "When displaying the modification page of a product in the backend.","Quando si visualizza la pagina di modifica di un prodotto nel back-office."
-"Example with the latest created product","Esempio con l'ultimo prodotto realizzato"
 "See {{Product URL rewrite}}.","Vedere {{Rewriting dell'URL prodotto}}."
 "List of addresses:","Elenco indirizzi:"
 "INCOMPLETE MODULE INSTALLATION","INSTALLAZIONE INCOMPLETA DEL MODULO"

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created L/01/01/2018
- * Updated M/16/05/2023
+ * Updated S/16/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -108,11 +108,12 @@ class Luigifab_Urlnosql_Model_Observer {
 	public function addCategoryTab(Varien_Event_Observer $observer) {
 
 		if (Mage::getStoreConfigFlag('urlnosql/general/enabled')) {
-			$tabs = $observer->getData('tabs');
-			if (!empty($tabs->getCategory()->getId()) && ($tabs->getCategory()->getLevel() > 1)) {
+			$tabs  = $observer->getData('tabs');
+			$block = $tabs->getLayout()->createBlock('urlnosql/adminhtml_categoryurls', 'category_url_rewrite');
+			if ($block->canShowTab()) {
 				$tabs->addTab('category_url_rewrite', [
-					'label'     => Mage::helper('urlnosql')->__('Category URL rewrite'),
-					'content'   => $tabs->getLayout()->createBlock('urlnosql/adminhtml_categoryurls', 'category_url_rewrite')->toHtml(),
+					'label'   => $block->getTabLabel(),
+					'content' => $block->toHtml(),
 				]);
 			}
 		}

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created D/15/11/2020
- * Updated V/20/11/2020
+ * Updated S/09/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -26,8 +26,15 @@ class Luigifab_Urlnosql_Urlnosql_DebugController extends Luigifab_Urlnosql_Debug
 	protected $_sessionNamespace = Mage_Adminhtml_Controller_Action::SESSION_NAMESPACE;
 
 	public function preDispatch() {
+
 		$this->getLayout()->setArea('adminhtml');
+		$this->getResponse()
+			->setHeader('Cache-Control', 'no-cache, must-revalidate', true)
+			->setHeader('X-Robots-Tag', 'noindex, nofollow', true);
+
 		Mage::dispatchEvent('adminhtml_controller_action_predispatch_start', []);
 		Mage_Core_Controller_Varien_Action::preDispatch();
+
+		return $this;
 	}
 }

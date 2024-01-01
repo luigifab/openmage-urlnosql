@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created L/03/08/2015
- * Updated M/16/05/2023
+ * Updated S/16/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -31,4 +31,13 @@
 			</action>
 		</reference>
 	</adminhtml_catalog_product_edit>
+
+	<adminhtml_cms_page_edit>
+		<reference name="cms_page_edit_tabs">
+			<action method="addTab" ifconfig="urlnosql/general/enabled">
+				<name>cms_url_rewrite</name>
+				<block>urlnosql/adminhtml_pageurls</block>
+			</action>
+		</reference>
+	</adminhtml_cms_page_edit>
 </layout>

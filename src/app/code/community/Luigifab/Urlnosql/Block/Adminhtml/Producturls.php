@@ -1,9 +1,9 @@
 <?php
 /**
  * Created L/03/08/2015
- * Updated J/21/09/2023
+ * Updated S/16/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -22,7 +22,7 @@
 class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block_Widget implements Mage_Adminhtml_Block_Widget_Tab_Interface {
 
 	public function getTabLabel() {
-		return $this->__('Product URL rewrite');
+		return $this->__('URL rewrite');
 	}
 
 	public function getTabTitle() {
@@ -34,14 +34,13 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 	}
 
 	public function canShowTab() {
-		return is_object(Mage::registry('current_product'));
+		$product = Mage::registry('current_product');
+		return is_object($product) && !empty($product->getId());
 	}
 
-	public function _toHtml($title = true, $product = null) {
+	public function _toHtml() {
 
-		if (!is_object($product))
-			$product = clone Mage::registry('current_product');
-
+		$product = clone Mage::registry('current_product');
 		$storeId = $this->getRequest()->getParam('store');
 		$storeId = empty($storeId) ? Mage::app()->getDefaultStoreView()->getId() : Mage::app()->getStore($storeId)->getId();
 
@@ -49,21 +48,12 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 		$attributes = array_filter(preg_split('#\s+#', 'entity_id '.Mage::getStoreConfig('urlnosql/general/attributes')));
 		$ignores    = array_filter(preg_split('#\s+#', Mage::getStoreConfig('urlnosql/general/ignore')));
 		$oldids     = Mage::getStoreConfig('urlnosql/general/oldids');
-		$html       = [];
 
-		if ($title === true) {
-			$html[] = '<div class="entry-edit">';
-			$html[] = '<div class="entry-edit-head"><h4 class="icon-head head-edit-form fieldset-legend">'.$this->getTabLabel().'</h4></div>';
-			$html[] = '<fieldset><legend>'.$this->getTabLabel().'</legend>';
-		}
-		else {
-			$html[] = '<div class="section-config">';
-			$html[] = '<div class="entry-edit-head collapseable"><strong>'.$title.'</strong></div>';
-			$html[] = '<fieldset class="config"><legend>'.$title.'</legend>';
-		}
+		$html = [];
+		$html[] = '<div class="entry-edit">';
+		$html[] = '<div class="entry-edit-head"><h4 class="icon-head head-edit-form fieldset-legend">'.$this->getTabLabel().'</h4></div>';
+		$html[] = '<fieldset><legend>'.$this->getTabLabel().'</legend>';
 
-		// format de l'url
-		// affiche la liste des attributs et ce produit remplace
 		if (!empty($oldids) && !empty($product->getData($oldids))) {
 			$html[] = '<p>'.$this->__('Format: <strong>www.example.org/%s%s</strong>',
 				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix());
@@ -75,8 +65,6 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 				str_replace('_', '', implode('-', $attributes)), $this->helper('catalog/product')->getProductUrlSuffix()).'</p>';
 		}
 
-		// détail de l'url
-		// pour la vue magasin par défaut, ou pour la vue magasin sélectionnée
 		$css = $this->getSkinUrl('images/error_msg_icon.gif');
 		$css = 'style="margin-left:8px; padding-left:19px; background:url(\''.$css.'\') no-repeat left center;"';
 
@@ -87,7 +75,7 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 
 			$source = $product->getResource()->getAttribute($attribute);
 
-			// https://stackoverflow.com/a/30519730
+			// @see https://stackoverflow.com/a/30519730
 			if (is_object($source)) {
 				$value = $product->getResource()->getAttributeRawValue($productId, $attribute, $storeId);
 				if (in_array($source->getData('frontend_input'), ['select', 'multiselect']))
@@ -119,15 +107,13 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 		}
 
 		$html[] = '</ul>';
-
-		// génération des URLs
-		// pour toutes les vues magasins activées
 		$html[] = '<p>'.$this->__('List of addresses:').'</p>';
 		$html[] = '<ul style="margin:0 1em 1em; list-style:inside;">';
 
 		$current = substr(Mage::getSingleton('core/locale')->getLocaleCode(), 0, 2); // not mb_substr
 		$stores  = Mage::getResourceModel('core/store_collection')->addFieldToFilter('is_active', 1)->setOrder('store_id', 'asc'); // without admin
-		$single  = $stores->getSize() == 1;
+		$enabled = Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
+		$single  = count($stores) == 1;
 		$wsites  = $product->getWebsiteIds();
 
 		foreach ($stores as $sid => $store) {
@@ -139,27 +125,18 @@ class Luigifab_Urlnosql_Block_Adminhtml_Producturls extends Mage_Adminhtml_Block
 			$marker = !$single && ($storeId == $sid);
 			$locale = substr(Mage::getStoreConfig('general/locale/code', $sid), 0, 2); // not mb_substr
 
-			$disabled = $product->getResource()->getAttributeRawValue($productId, 'status', $sid) != Mage_Catalog_Model_Product_Status::STATUS_ENABLED;
-			if ($locale != $current) {
-				$html[] = '<li>'.
-					($disabled ? '<em>' : '').
-					($marker ? '<strong>' : '').
-						$this->__('(%d) <span lang="%s">%s</span>:', $sid, $locale, $store->getData('name')).
-						' <a href="'.$url.'">'.$url.'</a>'.
-					($marker ? '</strong>' : '').
-					($disabled ? ' '.$this->__('(product disabled)').'</em>': '').
-				'</li>';
-			}
-			else {
-				$html[] = '<li>'.
-					($disabled ? '<em>' : '').
-					($marker ? '<strong>' : '').
-						$this->__('(%d) %s:', $sid, $store->getData('name')).
-						' <a href="'.$url.'">'.$url.'</a>'.
-					($marker ? '</strong>' : '').
-					($disabled ? ' ('.$this->__('Disabled').')</em>': '').
-				'</li>';
-			}
+			$disabled = $product->getResource()->getAttributeRawValue($productId, 'status', $sid) != $enabled;
+			$html[] = '<li>'.
+				($disabled ? '<em>' : '').
+				($marker ? '<strong>' : '').
+					(($locale != $current) ?
+						$this->__('(%d) <span lang="%s">%s</span>:', $sid, $locale, $store->getData('name')) :
+						$this->__('(%d) %s:', $sid, $store->getData('name'))
+					).' <a href="'.$url.'">'.$url.'</a>'.
+				($marker ? '</strong>' : '').
+				' (<a href="'.$store->getUrl('catalog/product/view', ['id' => $product->getId()]).'">id</a>)'.
+				($disabled ? ' '.$this->__('(product disabled)').'</em>': '').
+			'</li>';
 		}
 
 		$html[] = '</ul>';

@@ -1,9 +1,9 @@
 <?php
 /**
  * Created V/26/06/2015
- * Updated J/21/09/2023
+ * Updated D/12/11/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -69,8 +69,9 @@ class Luigifab_Urlnosql_Helper_Data extends Mage_Core_Helper_Abstract {
 		return Zend_Locale_Format::toNumber($value, $options);
 	}
 
-	public function getNumberToHumanSize(int $number) {
+	public function getNumberToHumanSize($number) {
 
+		$number = (float) $number;
 		if ($number < 1) {
 			$data = '';
 		}

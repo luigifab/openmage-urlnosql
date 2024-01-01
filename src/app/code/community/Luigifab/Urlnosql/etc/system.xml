@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
  * Created V/26/06/2015
- * Updated J/05/01/2023
+ * Updated S/16/12/2023
  *
- * Copyright 2015-2023 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
+ * Copyright 2015-2024 | Fabrice Creuzot (luigifab) <code~luigifab~fr>
  * Copyright 2015-2016 | Fabrice Creuzot <fabrice.creuzot~label-park~com>
  * Copyright 2020-2023 | Fabrice Creuzot <fabrice~cellublue~com>
  * https://github.com/luigifab/openmage-urlnosql
@@ -34,7 +34,7 @@
 			<show_in_default>1</show_in_default>
 			<show_in_website>0</show_in_website>
 			<show_in_store>0</show_in_store>
-			<buttons>
+			<buttons pr="3195">
 				<products translate="title">
 					<title>Products</title>
 					<action>adminhtml/catalog_product/index</action>
@@ -171,14 +171,6 @@
 						</debug_links>
 					</fields>
 				</general>
-				<example translate="label">
-					<label>Example with the latest created product</label>
-					<frontend_model>urlnosql/adminhtml_config_example</frontend_model>
-					<sort_order>2</sort_order>
-					<show_in_default>1</show_in_default>
-					<show_in_website>0</show_in_website>
-					<show_in_store>0</show_in_store>
-				</example>
 			</groups>
 		</urlnosql>
 		<catalog>
